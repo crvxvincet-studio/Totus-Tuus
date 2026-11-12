@@ -30,6 +30,34 @@ const state = {
   reminderEnabled: false,
   reminderTime: "20:00",
   lastApostoladoShownAt: 0,
+  cristoReyUnlocked: false,
+  printCertMode: "maria", // 'maria' | 'cristo'
+
+  // Estado del Santuario Cristo Rey
+  creyMode: "doctrina", // 'doctrina' | 'guiones' | 'oraciones'
+  creyDocSubView: "list", // 'list' | 'detail'
+  creyDocId: "cr-doc-1",
+  creyDocTab: "1",
+  creyGuionSubView: "list", // 'list' | 'detail'
+  creyGuionSearch: "",
+  creyGuionPage: 0,
+  creyGuionNum: 1,
+  creyOracionId: "or-consagracion",
+  creyOracionLang: "es",
+
+  // Estado de Vida y Misterios (El Logos + Fiestas del Señor)
+  cvidaSubView: "list", // 'list' | 'detail'
+  cvidaCat: "all", // 'all' | 'logos' | 'fiestas'
+  cvidaSearch: "",
+  cvidaPage: 0,
+  cvidaSelectedId: "logos-1",
+  cvidaTab: "1",
+
+  // Estado de los 8 Dogmas Cristológicos
+  cdogmaSubView: "list", // 'list' | 'detail'
+  cdogmaPage: 0,
+  cdogmaSelectedId: "cdogma-1",
+  cdogmaTab: "declaracion",
 
   // Dogmas
   dogmaSubView: "list", // 'list' | 'detail'
@@ -65,6 +93,44 @@ window.addEventListener("beforeinstallprompt", (e) => {
 function syncViewportHeight() {
   const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
   document.documentElement.style.setProperty("--app-height", `${Math.round(vh)}px`);
+}
+
+// Neutralizador XSS para cualquier cadena de texto (Auditoría Puntos 1 y 2)
+function escapeHtml(str) {
+  return String(str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+// Conteo estricto de los días válidos 1..34 (Auditoría Punto 9)
+function getValidCompletedDaysCount() {
+  if (window.TotusStorage && window.TotusStorage.countValidCompletedDays) {
+    return window.TotusStorage.countValidCompletedDays(state.completedDays);
+  }
+  let c = 0;
+  for (let d = 1; d <= 34; d++) {
+    if (state.completedDays && (state.completedDays[d] === true || state.completedDays[String(d)] === true)) {
+      c++;
+    }
+  }
+  return c;
+}
+
+// Estado dinámico del botón Cerrar / Aplicar en el Menú de Configuración
+function markSettingsDirty(isDirty) {
+  state.settingsDirty = Boolean(isDirty);
+  const closeBtn = document.getElementById("btn-close-settings-menu");
+  if (!closeBtn) return;
+  if (state.settingsDirty) {
+    closeBtn.textContent = "✓ Aplicar";
+    closeBtn.className = "day-completed-btn px-3.5 py-1.5 rounded-xl font-cinzel text-xs font-bold shadow-md";
+  } else {
+    closeBtn.textContent = "✕ Cerrar";
+    closeBtn.className = "fine-gold-active px-3 py-1.5 rounded-xl font-cinzel text-xs font-bold shadow-sm";
+  }
 }
 
 // Normalizador de acentos y diacríticos para búsqueda inteligente
@@ -228,22 +294,40 @@ function exportUserProgressJson() {
 
 function importUserProgressJson(file) {
   if (!file) return;
+  // Límite estricto de tamaño máximo (512 KB) contra Denegación de Servicio (Auditoría Puntos 3 y 8)
+  if (file.size > 512 * 1024) {
+    showToast("Archivo demasiado grande (máximo permitido: 512 KB)");
+    return;
+  }
   const reader = new FileReader();
   reader.onload = (e) => {
     try {
-      const data = JSON.parse(e.target.result);
-      if (data.selectedYear) state.selectedYear = data.selectedYear;
-      if (data.selectedFeastId) state.selectedFeastId = data.selectedFeastId;
-      if (data.completedDays && typeof data.completedDays === "object") state.completedDays = data.completedDays;
-      if (typeof data.userName === "string") state.userName = data.userName;
-      if (typeof data.userPlace === "string") state.userPlace = data.userPlace;
-      if (typeof data.reminderEnabled === "boolean") state.reminderEnabled = data.reminderEnabled;
-      if (data.reminderTime) state.reminderTime = data.reminderTime;
-      if (typeof data.signatureDataUrl === "string") state.signatureDataUrl = data.signatureDataUrl;
-      if (typeof data.signatureSvg === "string") state.signatureSvg = data.signatureSvg;
-      if (Array.isArray(data.sigStrokes)) state.sigStrokes = data.sigStrokes;
-      if (data.fontSizeScale) state.fontSizeScale = data.fontSizeScale;
-      if (data.uiLang) state.uiLang = data.uiLang;
+      const rawText = String(e.target.result || "");
+      if (rawText.length > 512 * 1024) {
+        showToast("Contenido de respaldo excede el límite de seguridad");
+        return;
+      }
+      const rawObj = JSON.parse(rawText);
+      const clean = window.TotusStorage ? window.TotusStorage.sanitizeState(rawObj) : null;
+      if (!clean) {
+        showToast("Estructura de respaldo no válida");
+        return;
+      }
+
+      state.selectedYear = clean.selectedYear;
+      state.selectedFeastId = clean.selectedFeastId;
+      state.completedDays = clean.completedDays;
+      state.userName = clean.userName;
+      state.userPlace = clean.userPlace;
+      state.userTribute = clean.userTribute;
+      state.reminderEnabled = clean.reminderEnabled;
+      state.reminderTime = clean.reminderTime;
+      state.sigStrokes = clean.sigStrokes;
+      state.signatureDataUrl = clean.signatureDataUrl;
+      state.signatureSvg = clean.signatureSvg;
+      state.fontSizeScale = clean.fontSizeScale;
+      state.uiLang = clean.uiLang;
+      state.cristoReyUnlocked = clean.cristoReyUnlocked;
 
       persistState();
       applyFontScaleAndLang();
@@ -254,9 +338,10 @@ function importUserProgressJson(file) {
       renderDogmasScreen();
       renderAdvocacionesScreen();
       updateGlobalProgressBadge();
-      showToast("✓ Progreso, días rezados y firma restaurados");
+      markSettingsDirty(true);
+      showToast("✓ Progreso validado y restaurado de forma segura");
     } catch (err) {
-      showToast("Archivo de respaldo no válido");
+      showToast("Archivo de respaldo no válido o corrupto");
     }
   };
   reader.readAsText(file);
@@ -268,7 +353,7 @@ function render34DaysVisualMap() {
   const grid = document.getElementById("map-34-days-grid");
   if (!grid) return;
 
-  const doneCount = Object.keys(state.completedDays).filter((k) => state.completedDays[k]).length;
+  const doneCount = getValidCompletedDaysCount();
   const subEl = document.getElementById("map-34-subtitle");
   if (subEl) {
     subEl.textContent = `${doneCount} de 34 días completados (${Math.round((doneCount / 34) * 100)}%) · Pulsa un día para abrirlo o ✓ para marcarlo`;
@@ -347,14 +432,65 @@ function checkWeeklyApostoladoDisplay() {
   }
 }
 
+
+function renderCristoReyUnlockControls() {
+  const count = getValidCompletedDaysCount();
+  const isPermanent = count >= 34;
+  if (isPermanent) {
+    state.cristoReyUnlocked = true;
+    try { localStorage.setItem("totusTuusConsecrated", "true"); } catch (e) {}
+  }
+
+  const topSub = document.getElementById("menu-top-cristo-sub");
+  const topBtn = document.getElementById("btn-menu-top-cristo");
+  const lockedMsg = document.getElementById("menu-top-cristo-locked-msg");
+  const desc = document.getElementById("cristo-rey-unlock-status-desc");
+  const bottomBtn = document.getElementById("btn-unlock-cristo-now");
+  const cristoHome = document.getElementById("screen-cristo-home");
+  const lockOverlay = document.getElementById("cristo-lock-overlay");
+
+  if (topSub && topBtn) {
+    if (isPermanent) {
+      topSub.textContent = "🔓 Consagración concluida · Toca para entrar →";
+      topBtn.className = "fine-gold-active w-full py-2.5 px-4 rounded-xl font-cinzel font-bold flex flex-col items-center justify-center gap-0.5 shadow-md mx-auto";
+      if (lockedMsg) lockedMsg.classList.add("hidden");
+    } else if (state.cristoReyUnlocked) {
+      topSub.textContent = "🔓 Desbloqueado por este momento · Toca para entrar →";
+      topBtn.className = "fine-gold-active w-full py-2.5 px-4 rounded-xl font-cinzel font-bold flex flex-col items-center justify-center gap-0.5 shadow-md mx-auto";
+      if (lockedMsg) lockedMsg.classList.add("hidden");
+    } else {
+      topSub.textContent = "🔒 Acceso se abrirá al completar la Consagración";
+      topBtn.className = "fine-gold-btn w-full py-2.5 px-4 rounded-xl font-cinzel font-bold flex flex-col items-center justify-center gap-0.5 shadow-sm mx-auto";
+    }
+  }
+
+  if (desc) {
+    desc.textContent = isPermanent
+      ? "✠ Consagración completada (34/34 días). Acceso permanente abierto."
+      : "Acceso se abrirá al completar la Consagración.";
+  }
+
+  if (bottomBtn) {
+    bottomBtn.textContent = "Desbloquear Ahora";
+  }
+
+  if (cristoHome) {
+    cristoHome.classList.toggle("is-locked", !state.cristoReyUnlocked);
+  }
+  if (lockOverlay) {
+    lockOverlay.setAttribute("aria-hidden", state.cristoReyUnlocked ? "true" : "false");
+  }
+}
+
 function updateGlobalProgressBadge() {
-  const count = Object.keys(state.completedDays).filter((k) => state.completedDays[k]).length;
+  const count = getValidCompletedDaysCount();
   const pct = Math.round((count / 34) * 100);
   document.querySelectorAll(".global-progress-text").forEach((el) => {
     el.textContent = `${count} / 34 días (${pct}%)`;
   });
   const bar = document.getElementById("global-progress-bar");
   if (bar) bar.style.width = `${Math.max(3, pct)}%`;
+  renderCristoReyUnlockControls();
 }
 
 // Escalado de lectura indeformable e internacionalización completa (Punto 19)
@@ -372,39 +508,74 @@ function applyFontScaleAndLang() {
 }
 
 function syncUserNameAndPlaceEverywhere() {
-  const nameVal = state.userName || "";
-  const placeVal = state.userPlace || "";
+  const cleanName = window.TotusStorage
+    ? window.TotusStorage.stripUnsafeText(state.userName || "", 120)
+    : String(state.userName || "").replace(/[<>]/g, "").slice(0, 120);
+  const cleanPlace = window.TotusStorage
+    ? window.TotusStorage.stripUnsafeText(state.userPlace || "", 120)
+    : String(state.userPlace || "").replace(/[<>]/g, "").slice(0, 120);
+
+  state.userName = cleanName;
+  state.userPlace = cleanPlace;
 
   const in1 = document.getElementById("input-cert-name");
-  if (in1 && in1.value !== nameVal) in1.value = nameVal;
+  if (in1 && in1.value !== cleanName) in1.value = cleanName;
 
   const in2 = document.getElementById("input-cert-name-modal");
-  if (in2 && in2.value !== nameVal) in2.value = nameVal;
+  if (in2 && in2.value !== cleanName) in2.value = cleanName;
 
   const pl1 = document.getElementById("input-cert-place");
-  if (pl1 && pl1.value !== placeVal) pl1.value = placeVal;
+  if (pl1 && pl1.value !== cleanPlace) pl1.value = cleanPlace;
 
   const pl2 = document.getElementById("input-cert-place-modal");
-  if (pl2 && pl2.value !== placeVal) pl2.value = placeVal;
+  if (pl2 && pl2.value !== cleanPlace) pl2.value = cleanPlace;
 
-  const displayName = nameVal.trim() || "[Escribe arriba tu nombre y apellidos]";
+  // Inserción 100% segura mediante nodos DOM y textContent (Cero innerHTML con datos del usuario)
+  const displayName = cleanName || "[Escribe arriba tu nombre y apellidos]";
   const liveRef = document.getElementById("name-live-reflection");
   if (liveRef) {
-    liveRef.innerHTML = `En tu Consagración dirá: «Yo, <strong class="text-[#5A3E0B] underline decoration-[#B8913E]">${displayName}</strong>, pecador infiel, renuevo y ratifico hoy en vuestras manos los votos de mi Bautismo...»`;
+    liveRef.textContent = "";
+    liveRef.appendChild(document.createTextNode("En tu Consagración dirá: «Yo, "));
+    const strongEl = document.createElement("strong");
+    strongEl.className = "text-[#5A3E0B] underline decoration-[#B8913E]";
+    strongEl.textContent = displayName;
+    liveRef.appendChild(strongEl);
+    liveRef.appendChild(document.createTextNode(", pecador infiel, renuevo y ratifico hoy en vuestras manos los votos de mi Bautismo...»"));
   }
 
   const dayFormulaEl = document.getElementById("day-formula-dynamic-text");
   if (dayFormulaEl) {
-    const dayName = nameVal.trim() || "________________________________";
-    dayFormulaEl.innerHTML = `«Yo, <strong class="text-[#5A3E0B] underline">${dayName}</strong>, pecador infiel, renuevo y ratifico hoy en vuestras manos los votos de mi Bautismo; renuncio para siempre a Satanás, a sus pompas y a sus obras, y me entrego enteramente a Jesucristo, la Sabiduría encarnada, para llevar mi cruz tras Él todos los días de mi vida. Os entrego y consagro, en calidad de esclavo, mi cuerpo y mi alma, mis bienes interiores y exteriores, y aun el valor de mis buenas acciones pasadas, presentes y futuras...»`;
+    const dayName = cleanName || "________________________________";
+    dayFormulaEl.textContent = "";
+    dayFormulaEl.appendChild(document.createTextNode("«Yo, "));
+    const strongDay = document.createElement("strong");
+    strongDay.className = "text-[#5A3E0B] underline";
+    strongDay.textContent = dayName;
+    dayFormulaEl.appendChild(strongDay);
+    dayFormulaEl.appendChild(document.createTextNode(", pecador infiel, renuevo y ratifico hoy en vuestras manos los votos de mi Bautismo; renuncio para siempre a Satanás, a sus pompas y a sus obras, y me entrego enteramente a Jesucristo, la Sabiduría encarnada, para llevar mi cruz tras Él todos los días de mi vida. Os entrego y consagro, en calidad de esclavo, mi cuerpo y mi alma, mis bienes interiores y exteriores, y aun el valor de mis buenas acciones pasadas, presentes y futuras...»"));
   }
 
   renderCertificatePreview();
 }
 
 function switchScreen(target) {
+  // Si el usuario regresa a las pantallas de Totus Tuus y no ha concluido los 34 días,
+  // el desbloqueo temporal expira (solo dura por ese momento).
+  const count = getValidCompletedDaysCount();
+  if (["home", "consagracion", "dogmas", "advocaciones"].includes(target) && count < 34) {
+    state.cristoReyUnlocked = false;
+  }
   state.screen = target;
-  ["home", "consagracion", "dogmas", "advocaciones"].forEach((s) => {
+  [
+    "home",
+    "consagracion",
+    "dogmas",
+    "advocaciones",
+    "cristo-home",
+    "cristo-rey",
+    "cristo-vida",
+    "cristo-dogmas"
+  ].forEach((s) => {
     const el = document.getElementById(`screen-${s}`);
     if (el) el.classList.toggle("hidden", s !== target);
   });
@@ -979,13 +1150,18 @@ function initSignaturePad() {
 function exportSignatureToBase64AndSvg() {
   const canvas = document.getElementById("signature-canvas");
   if (!canvas) return;
-  state.signatureDataUrl = canvas.toDataURL("image/png");
+  const rawDataUrl = canvas.toDataURL("image/png");
+  state.signatureDataUrl = (window.TotusStorage && window.TotusStorage.isValidPngDataUrl(rawDataUrl))
+    ? rawDataUrl
+    : "";
 
-  const pathStrings = state.sigStrokes.map((stroke) => {
-    const d = stroke.map((pt, i) => `${i === 0 ? "M" : "L"} ${pt.x} ${pt.y}`).join(" ");
-    return `<path d="${d}" fill="none" stroke="#22170C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`;
-  });
-  state.signatureSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${canvas.width} ${canvas.height}" width="${canvas.width}" height="${canvas.height}">${pathStrings.join("")}</svg>`;
+  state.sigStrokes = window.TotusStorage
+    ? window.TotusStorage.sanitizeSigStrokes(state.sigStrokes)
+    : state.sigStrokes;
+
+  state.signatureSvg = window.TotusStorage
+    ? window.TotusStorage.buildSafeSignatureSvgFromStrokes(state.sigStrokes, canvas.width, canvas.height)
+    : "";
 
   persistState();
   renderCertificatePreview();
@@ -994,42 +1170,405 @@ function exportSignatureToBase64AndSvg() {
 function renderCertificatePreview() {
   const feast = window.LITURGICAL_CONSECRATION_FEASTS.find((f) => f.id === state.selectedFeastId) || window.LITURGICAL_CONSECRATION_FEASTS[0];
   const day34Info = computeExactDateForDay(feast, state.selectedYear, 34);
-  const nameTxt = state.userName.trim() || "____________________________________";
-  const placeTxt = state.userPlace.trim() || "________________________";
-  const sigBlock = state.signatureDataUrl
-    ? `<img src="${state.signatureDataUrl}" alt="Firma digital del consagrado" class="h-14 mx-auto object-contain mb-1" />`
+  const rawName = (state.userName || "").trim();
+  const rawPlace = (state.userPlace || "").trim();
+  const rawTribute = (state.userTribute || "Ayuno, limosna y cadenita bendecida").trim();
+
+  const safeNameTxt = escapeHtml(rawName || "____________________________________");
+  const safePlaceTxt = escapeHtml(rawPlace || "________________________");
+  const safeTributeTxt = escapeHtml(rawTribute);
+  const safeSignerFooter = escapeHtml(rawName || (state.printCertMode === "cristo" ? "vasallo y soldado de Cristo Rey" : "esclavo de amor de Jesús por María"));
+
+  const hasValidSig = Boolean(
+    state.signatureDataUrl &&
+    window.TotusStorage &&
+    window.TotusStorage.isValidPngDataUrl(state.signatureDataUrl)
+  );
+  const sigBlock = hasValidSig
+    ? `<img alt="Firma digital del consagrado" class="cert-sig-img h-14 mx-auto object-contain mb-1" />`
     : `<div class="h-12"></div>`;
 
-  const html = `
-    <div class="text-center border-b border-[#C49E50] pb-3 mb-3">
-      <p class="font-cinzel text-[11px] uppercase tracking-[0.25em] text-[#5A3E0B]">✠ Totus Tuus · Ad Iesum per Mariam ✠</p>
-      <h2 class="font-cinzel font-bold text-base sm:text-lg text-[#22170C] mt-1">
-        CONSAGRACIÓN DE SÍ MISMO A JESUCRISTO, LA SABIDURÍA ENCARNADA, POR MEDIO DE MARÍA
-      </h2>
-      <p class="font-garamond italic text-sm text-[#4A3412]">
-        Fórmula oficial de San Luis María Grignion de Montfort (TVD, nn. 227–233) · ${feast.title}
-      </p>
-    </div>
-    <div class="font-garamond text-base leading-relaxed text-justify space-y-2 text-[#22170C]">
-      <p>¡Oh Sabiduría eterna y encarnada! ¡Oh amable y adorable Jesús, verdadero Dios y verdadero Hombre, Hijo único del Padre Eterno y de María, siempre Virgen! Os adoro profundamente en el seno y en los esplendores de vuestro Padre, durante la eternidad, y en el seno virginal de María, vuestra dignísima Madre, en el tiempo de vuestra Encarnación.</p>
-      <p>Por esto he recurrido a la intercesión de vuestra Santísima Madre, que Vos me habéis dado como Mediadora ante Vos, y por este medio espero obtener de Vos la contrición y el perdón de mis pecados, la adquisición y la conservación de la Sabiduría.</p>
-      <p>Yo, <strong class="text-[#5A3E0B] underline decoration-[#B8913E]">${nameTxt}</strong>, pecador infiel, renuevo y ratifico hoy en vuestras manos los votos de mi Bautismo. Renuncio para siempre a Satanás, a sus pompas y a sus obras, y me entrego enteramente a Jesucristo, la Sabiduría encarnada, para llevar mi cruz tras Él todos los días de mi vida; y a fin de que le sea más fiel de lo que he sido hasta ahora, os escojo hoy, ¡oh María!, en presencia de toda la corte celestial, por mi Madre y Señora.</p>
-      <p>Os entrego y consagro, en calidad de esclavo, mi cuerpo y mi alma, mis bienes interiores y exteriores, y aun el valor de mis buenas acciones pasadas, presentes y futuras, otorgándoos entero y pleno derecho de disponer de mí y de todo lo que me pertenece, sin excepción, a vuestro agrado, a la mayor gloria de Dios, en el tiempo y en la eternidad.</p>
-      <p>¡Oh Virgen fiel!, hacedme en todo tan perfecto discípulo, imitador y esclavo de la Sabiduría encarnada, Jesucristo, vuestro Hijo, que por vuestra intercesión y a ejemplo vuestro llegue a la plenitud de su edad sobre la tierra y de su gloria en los cielos. Así sea.</p>
-    </div>
-    <div class="pt-4 mt-4 border-t border-[#C49E50] grid grid-cols-1 sm:grid-cols-2 items-end gap-4 font-garamond text-sm">
-      <div>
-        <p><strong>Lugar y Fecha:</strong> ${placeTxt}, ${day34Info.fullLabel}</p>
-        <p class="text-xs italic text-[#4A3412]">Tributo anual prometido (TVD, n. 231): ${state.userTribute}</p>
+  const btnMaria = document.getElementById("btn-cert-mode-maria");
+  const btnCristo = document.getElementById("btn-cert-mode-cristo");
+  if (btnMaria && btnCristo) {
+    btnMaria.className = state.printCertMode === "maria"
+      ? "fine-gold-active py-2 px-3 rounded-xl font-cinzel text-xs font-bold shadow"
+      : "fine-gold-btn py-2 px-3 rounded-xl font-cinzel text-xs font-bold";
+    btnCristo.className = state.printCertMode === "cristo"
+      ? "fine-gold-active py-2 px-3 rounded-xl font-cinzel text-xs font-bold shadow"
+      : "fine-gold-btn py-2 px-3 rounded-xl font-cinzel text-xs font-bold";
+  }
+
+  let html = "";
+  if (state.printCertMode === "cristo") {
+    html = `
+      <div class="text-center border-b border-[#C49E50] pb-3 mb-3">
+        <p class="font-cinzel text-[11px] uppercase tracking-[0.25em] text-[#5A3E0B]">✠ Christus Vincit · Christus Regnat · Christus Imperat ✠</p>
+        <h2 class="font-cinzel font-bold text-base sm:text-lg text-[#22170C] mt-1">
+          ACTO SOLEMNE DE CONSAGRACIÓN A JESUCRISTO REY Y A SU SAGRADO CORAZÓN
+        </h2>
+        <p class="font-garamond italic text-sm text-[#4A3412]">
+          Fórmula Pontificia de S.S. León XIII (Annum Sacrum) y S.S. Pío XI (Quas Primas) · Ad Iesum per Mariam
+        </p>
       </div>
-      <div class="text-center">
-        ${sigBlock}
-        <div class="border-t border-[#22170C] pt-1 font-cinzel text-[11px]">Firma de ${state.userName.trim() || "esclavo de amor de Jesús por María"}</div>
+      <div class="font-garamond text-base leading-relaxed text-justify space-y-2 text-[#22170C]">
+        <p>¡Oh dulcísimo Jesús, Redentor del género humano! Miradme humildemente postrado delante de vuestro altar: vuestro soy y vuestro quiero ser; y a fin de poder vivir más estrechamente unido con Vos, yo, <strong class="text-[#5A3E0B] underline decoration-[#B8913E]">${safeNameTxt}</strong>, habiendo completado mi entrega total por manos de vuestra Santísima Madre en <em>Totus Tuus</em>, me consagro hoy espontánea e íntegramente a Vos, Cristo Rey inmortal de los siglos, y a vuestro Sacratísimo Corazón.</p>
+        <p>Reconozco y profeso vuestra soberanía real sobre mi inteligencia por la adhesión íntegra a vuestra Verdad revelada; sobre mi voluntad por la obediencia amorosa a vuestros santos Mandamientos; y sobre mi corazón, mi familia y mi trabajo por el ejercicio de la caridad y de la justicia cristiana.</p>
+        <p>Sed Rey, ¡oh Señor!, no sólo de los hijos fieles que jamás se han apartado de Vos, sino también de los pródigos que os han abandonado; sed Rey de aquellos que viven engañados por el error o separados de vuestra Iglesia, y devolvedlos al puerto de la verdad y a la unidad de la fe, para que pronto no haya más que un solo rebaño y un solo Pastor.</p>
+        <p>Conceded, ¡oh Señor!, incolumidad y libertad segura a vuestra Santa Iglesia; otorgad a nuestras familias y a todos los pueblos la tranquilidad del orden; y haced que desde el uno al otro confín de la tierra resuene esta única voz: <em>¡Alabado sea el Corazón divino, por quien nos vino la salvación; a Él sea la gloria y el honor por los siglos de los siglos! ¡Viva Cristo Rey!</em> Amén.</p>
       </div>
-    </div>
-  `;
-  document.getElementById("cert-preview-container").innerHTML = html;
-  document.getElementById("print-only-sheet").innerHTML = html;
+      <div class="pt-4 mt-4 border-t border-[#C49E50] grid grid-cols-1 sm:grid-cols-2 items-end gap-4 font-garamond text-sm">
+        <div>
+          <p><strong>Lugar y Fecha:</strong> ${safePlaceTxt}, ${escapeHtml(day34Info.fullLabel)}</p>
+          <p class="text-xs italic text-[#4A3412]">Lema: «Ad Iesum per Mariam — Christus Vincit, Christus Regnat, Christus Imperat»</p>
+        </div>
+        <div class="text-center">
+          ${sigBlock}
+          <div class="border-t border-[#22170C] pt-1 font-cinzel text-[11px]">Firma de ${safeSignerFooter}</div>
+        </div>
+      </div>
+    `;
+  } else {
+    html = `
+      <div class="text-center border-b border-[#C49E50] pb-3 mb-3">
+        <p class="font-cinzel text-[11px] uppercase tracking-[0.25em] text-[#5A3E0B]">✠ Totus Tuus · Ad Iesum per Mariam ✠</p>
+        <h2 class="font-cinzel font-bold text-base sm:text-lg text-[#22170C] mt-1">
+          CONSAGRACIÓN DE SÍ MISMO A JESUCRISTO, LA SABIDURÍA ENCARNADA, POR MEDIO DE MARÍA
+        </h2>
+        <p class="font-garamond italic text-sm text-[#4A3412]">
+          Fórmula oficial de San Luis María Grignion de Montfort (TVD, nn. 227–233) · ${escapeHtml(feast.title)}
+        </p>
+      </div>
+      <div class="font-garamond text-base leading-relaxed text-justify space-y-2 text-[#22170C]">
+        <p>¡Oh Sabiduría eterna y encarnada! ¡Oh amable y adorable Jesús, verdadero Dios y verdadero Hombre, Hijo único del Padre Eterno y de María, siempre Virgen! Os adoro profundamente en el seno y en los esplendores de vuestro Padre, durante la eternidad, y en el seno virginal de María, vuestra dignísima Madre, en el tiempo de vuestra Encarnación.</p>
+        <p>Por esto he recurrido a la intercesión de vuestra Santísima Madre, que Vos me habéis dado como Mediadora ante Vos, y por este medio espero obtener de Vos la contrición y el perdón de mis pecados, la adquisición y la conservación de la Sabiduría.</p>
+        <p>Yo, <strong class="text-[#5A3E0B] underline decoration-[#B8913E]">${safeNameTxt}</strong>, pecador infiel, renuevo y ratifico hoy en vuestras manos los votos de mi Bautismo. Renuncio para siempre a Satanás, a sus pompas y a sus obras, y me entrego enteramente a Jesucristo, la Sabiduría encarnada, para llevar mi cruz tras Él todos los días de mi vida; y a fin de que le sea más fiel de lo que he sido hasta ahora, os escojo hoy, ¡oh María!, en presencia de toda la corte celestial, por mi Madre y Señora.</p>
+        <p>Os entrego y consagro, en calidad de esclavo, mi cuerpo y mi alma, mis bienes interiores y exteriores, y aun el valor de mis buenas acciones pasadas, presentes y futuras, otorgándoos entero y pleno derecho de disponer de mí y de todo lo que me pertenece, sin excepción, a vuestro agrado, a la mayor gloria de Dios, en el tiempo y en la eternidad.</p>
+        <p>¡Oh Virgen fiel!, hacedme en todo tan perfecto discípulo, imitador y esclavo de la Sabiduría encarnada, Jesucristo, vuestro Hijo, que por vuestra intercesión y a ejemplo vuestro llegue a la plenitud de su edad sobre la tierra y de su gloria en los cielos. Así sea.</p>
+      </div>
+      <div class="pt-4 mt-4 border-t border-[#C49E50] grid grid-cols-1 sm:grid-cols-2 items-end gap-4 font-garamond text-sm">
+        <div>
+          <p><strong>Lugar y Fecha:</strong> ${safePlaceTxt}, ${escapeHtml(day34Info.fullLabel)}</p>
+          <p class="text-xs italic text-[#4A3412]">Tributo anual prometido (TVD, n. 231): ${safeTributeTxt}</p>
+        </div>
+        <div class="text-center">
+          ${sigBlock}
+          <div class="border-t border-[#22170C] pt-1 font-cinzel text-[11px]">Firma de ${safeSignerFooter}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  ["cert-preview-container", "print-only-sheet"].forEach((cid) => {
+    const container = document.getElementById(cid);
+    if (!container) return;
+    container.innerHTML = html;
+    if (hasValidSig) {
+      container.querySelectorAll(".cert-sig-img").forEach((imgEl) => {
+        imgEl.src = state.signatureDataUrl;
+      });
+    }
+  });
+}
+
+// ============================================================================
+// 5. RENDERIZADO DE LAS TRES SECCIONES DE CRISTO REY
+// ============================================================================
+function renderCristoReyScreen() {
+  ["doctrina", "guiones", "oraciones"].forEach((m) => {
+    const panel = document.getElementById(`crey-panel-${m}`);
+    if (panel) panel.classList.toggle("hidden", state.creyMode !== m);
+  });
+  document.querySelectorAll(".crey-mode-btn").forEach((btn) => {
+    const m = btn.getAttribute("data-crey-mode");
+    const active = m === state.creyMode;
+    btn.className = `crey-mode-btn py-1.5 px-1.5 rounded-xl font-cinzel text-[11px] sm:text-xs font-bold truncate transition-all ${active ? "fine-gold-active" : "fine-gold-btn"}`;
+  });
+
+  const pagerWrap = document.getElementById("crey-guion-pager-wrap");
+  if (pagerWrap) {
+    pagerWrap.classList.toggle("hidden", !(state.creyMode === "guiones" && state.creyGuionSubView === "list"));
+  }
+
+  // A) Módulo 1: Sobre la Dignidad de Cristo Rey (6 capítulos)
+  const docListWrap = document.getElementById("crey-doctrina-list");
+  const docDetailWrap = document.getElementById("crey-doctrina-detail");
+  if (docListWrap && docDetailWrap) {
+    const isList = state.creyDocSubView === "list";
+    docListWrap.classList.toggle("hidden", !isList);
+    docDetailWrap.classList.toggle("hidden", isList);
+
+    const btnsEl = document.getElementById("crey-doctrina-buttons");
+    if (btnsEl && window.CRISTO_REY_DOCTRINA) {
+      btnsEl.innerHTML = window.CRISTO_REY_DOCTRINA.map((item) => `
+        <button type="button" data-crey-doc-id="${item.id}" class="crey-doc-item-btn fine-gold-btn min-h-[3.4rem] py-2.5 px-3.5 rounded-2xl text-left flex items-center justify-between gap-2.5">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="gold-medallion-badge w-9 h-9 rounded-full font-cinzel font-bold text-xs flex items-center justify-center shrink-0">
+              ${item.num}
+            </span>
+            <span class="btn-title-scalable font-cinzel font-bold text-[#22170C] block leading-snug">
+              ${item.title}
+            </span>
+          </div>
+          <span class="font-cinzel text-xl font-bold text-[#5A3E0B] shrink-0">›</span>
+        </button>
+      `).join("");
+
+      btnsEl.querySelectorAll(".crey-doc-item-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          state.creyDocId = btn.getAttribute("data-crey-doc-id");
+          state.creyDocTab = "1";
+          state.creyDocSubView = "detail";
+          renderCristoReyScreen();
+        });
+      });
+    }
+
+    const activeDoc = (window.CRISTO_REY_DOCTRINA || []).find((x) => x.id === state.creyDocId) || (window.CRISTO_REY_DOCTRINA || [])[0];
+    if (activeDoc) {
+      document.getElementById("crey-doc-source-badge").textContent = activeDoc.source;
+      document.getElementById("crey-doc-detail-title").textContent = `${activeDoc.num}. ${activeDoc.title}`;
+      document.getElementById("crey-doctab-label-1").textContent = `1. ${activeDoc.tab1Title}`;
+      document.getElementById("crey-doctab-label-2").textContent = `2. ${activeDoc.tab2Title}`;
+      document.getElementById("crey-doctab-label-3").textContent = `3. ${activeDoc.tab3Title}`;
+
+      document.querySelectorAll(".crey-doctab-btn").forEach((btn) => {
+        const t = btn.getAttribute("data-crey-doctab");
+        btn.className = `crey-doctab-btn py-1 px-2 rounded-xl font-cinzel text-[11px] font-bold truncate transition-all ${t === state.creyDocTab ? "fine-gold-active" : "fine-gold-btn"}`;
+      });
+
+      const bodyHtml = state.creyDocTab === "1"
+        ? activeDoc.tab1Html
+        : state.creyDocTab === "2"
+        ? activeDoc.tab2Html
+        : activeDoc.tab3Html;
+      document.getElementById("crey-doc-detail-body").innerHTML = bodyHtml;
+    }
+  }
+
+  // B) Módulo 2: Las 22 Enseñanzas sobre Cristo Rey (organizadas limpiamente como Advocaciones)
+  const guionListWrap = document.getElementById("crey-guiones-list");
+  const guionDetailWrap = document.getElementById("crey-guiones-detail");
+  if (guionListWrap && guionDetailWrap && window.CRISTO_REY_GUIONES) {
+    const isList = state.creyGuionSubView === "list";
+    guionListWrap.classList.toggle("hidden", !isList);
+    guionDetailWrap.classList.toggle("hidden", isList);
+
+    const q = normalizeText(state.creyGuionSearch.trim());
+    const filteredGuiones = window.CRISTO_REY_GUIONES.filter((g) => {
+      if (!q) return true;
+      return normalizeText(`${g.num} ${g.serie} ${g.title} ${g.esquema} ${g.desarrollo}`).includes(q);
+    });
+
+    const pageSize = 6;
+    const totalPages = Math.max(1, Math.ceil(filteredGuiones.length / pageSize));
+    if (state.creyGuionPage >= totalPages) state.creyGuionPage = 0;
+    const slice = filteredGuiones.slice(state.creyGuionPage * pageSize, (state.creyGuionPage + 1) * pageSize);
+
+    document.getElementById("crey-guion-page-indicator").textContent = `${state.creyGuionPage + 1} / ${totalPages}`;
+    const gGrid = document.getElementById("crey-guiones-grid");
+    if (slice.length === 0) {
+      gGrid.innerHTML = `<div class="col-span-2 p-5 text-center font-garamond italic text-base text-[#4A3412] marian-reliquary-card rounded-2xl">No se encontraron enseñanzas con esa palabra clave.</div>`;
+    } else {
+      gGrid.innerHTML = slice.map((g) => `
+        <button type="button" data-guion-num="${g.num}" class="crey-guion-item-btn fine-gold-btn min-h-[3.2rem] py-2.5 px-3.5 rounded-2xl text-left flex items-center justify-between gap-2.5">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="gold-medallion-badge w-8 h-8 rounded-full font-cinzel font-bold text-xs flex items-center justify-center shrink-0">
+              ${g.num}
+            </span>
+            <span class="btn-title-scalable font-cinzel font-bold text-[#22170C] block leading-snug">
+              ${g.title}
+            </span>
+          </div>
+          <span class="font-cinzel text-xl font-bold text-[#5A3E0B] shrink-0">›</span>
+        </button>
+      `).join("");
+
+      gGrid.querySelectorAll(".crey-guion-item-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          state.creyGuionNum = parseInt(btn.getAttribute("data-guion-num"), 10);
+          state.creyGuionSubView = "detail";
+          renderCristoReyScreen();
+        });
+      });
+    }
+
+    const activeG = window.CRISTO_REY_GUIONES.find((x) => x.num === state.creyGuionNum) || window.CRISTO_REY_GUIONES[0];
+    if (activeG) {
+      document.getElementById("crey-guion-detail-num").textContent = `Enseñanza ${activeG.num} / ${window.CRISTO_REY_GUIONES.length}`;
+      document.getElementById("crey-guion-detail-serie").textContent = activeG.serie;
+      document.getElementById("crey-guion-detail-title").textContent = `${activeG.num}. ${activeG.title}`;
+      document.getElementById("crey-guion-detail-ref").textContent = activeG.ref;
+      document.getElementById("crey-guion-detail-esquema").textContent = activeG.esquema;
+      document.getElementById("crey-guion-detail-desarrollo").textContent = activeG.desarrollo;
+      document.getElementById("crey-guion-detail-proposito").textContent = activeG.proposito;
+    }
+  }
+
+  // C) Módulo 3: Consagración y Oraciones a Cristo Rey
+  if (window.CRISTO_REY_ORACIONES) {
+    const pillsWrap = document.getElementById("crey-oraciones-pills");
+    if (pillsWrap) {
+      pillsWrap.innerHTML = window.CRISTO_REY_ORACIONES.map((o) => `
+        <button type="button" data-crey-orid="${o.id}" class="crey-or-btn px-2.5 py-1 rounded-lg font-cinzel text-[11px] font-bold transition-all ${o.id === state.creyOracionId ? "fine-gold-active" : "fine-gold-btn"}">
+          ${o.shortName}
+        </button>
+      `).join("");
+
+      pillsWrap.querySelectorAll(".crey-or-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          state.creyOracionId = btn.getAttribute("data-crey-orid");
+          renderCristoReyScreen();
+        });
+      });
+    }
+
+    const activeOr = window.CRISTO_REY_ORACIONES.find((x) => x.id === state.creyOracionId) || window.CRISTO_REY_ORACIONES[0];
+    if (activeOr) {
+      document.getElementById("crey-oracion-title").textContent =
+        state.creyOracionLang === "la" ? activeOr.titleLa : activeOr.titleEs;
+      document.getElementById("crey-oracion-body").textContent =
+        state.creyOracionLang === "la" ? activeOr.la : activeOr.es;
+    }
+
+    document.getElementById("crey-lang-es").className =
+      state.creyOracionLang === "es"
+        ? "px-2.5 py-0.5 rounded text-xs font-cinzel font-bold bg-[#5A3E0B] text-white"
+        : "px-2.5 py-0.5 rounded text-xs font-cinzel font-bold text-[#4A3412]";
+    document.getElementById("crey-lang-la").className =
+      state.creyOracionLang === "la"
+        ? "px-2.5 py-0.5 rounded text-xs font-cinzel font-bold bg-[#5A3E0B] text-white"
+        : "px-2.5 py-0.5 rounded text-xs font-cinzel font-bold text-[#4A3412]";
+  }
+}
+
+function getFilteredCristoVidaItems() {
+  const q = normalizeText(state.cvidaSearch.trim());
+  return (window.CRISTO_VIDA_ITEMS || []).filter((item) => {
+    if (state.cvidaCat !== "all" && item.category !== state.cvidaCat) return false;
+    if (!q) return true;
+    return normalizeText(`${item.title} ${item.subtitle} ${item.badge} ${item.ref}`).includes(q);
+  });
+}
+
+function renderCristoVidaScreen() {
+  const isList = state.cvidaSubView === "list";
+  document.getElementById("cvida-view-list").classList.toggle("hidden", !isList);
+  document.getElementById("cvida-view-detail").classList.toggle("hidden", isList);
+
+  document.querySelectorAll(".cvida-cat-btn").forEach((btn) => {
+    const c = btn.getAttribute("data-cvida-cat");
+    btn.className = `cvida-cat-btn px-2.5 py-1.5 rounded-xl font-cinzel text-[11px] font-bold transition-all ${c === state.cvidaCat ? "fine-gold-active" : "fine-gold-btn"}`;
+  });
+
+  const filtered = getFilteredCristoVidaItems();
+  const pageSize = 6;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  if (state.cvidaPage >= totalPages) state.cvidaPage = 0;
+  const slice = filtered.slice(state.cvidaPage * pageSize, (state.cvidaPage + 1) * pageSize);
+
+  document.getElementById("cvida-page-indicator").textContent = `${state.cvidaPage + 1} / ${totalPages}`;
+  const gridEl = document.getElementById("cvida-buttons-grid");
+  if (slice.length === 0) {
+    gridEl.innerHTML = `<div class="col-span-2 p-6 text-center font-garamond italic text-base text-[#4A3412] marian-reliquary-card rounded-2xl">No se encontraron enseñanzas o misterios con esa palabra clave.</div>`;
+  } else {
+    gridEl.innerHTML = slice.map((item) => `
+      <button type="button" data-cvida-id="${item.id}" class="cvida-item-btn fine-gold-btn min-h-[3.25rem] py-2.5 px-3.5 rounded-2xl text-left flex items-center justify-between gap-2.5">
+        <span class="btn-title-scalable font-cinzel font-bold text-[#22170C] leading-snug">
+          ${item.title}
+        </span>
+        <span class="font-cinzel font-bold text-xl text-[#5A3E0B] shrink-0">›</span>
+      </button>
+    `).join("");
+
+    gridEl.querySelectorAll(".cvida-item-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.cvidaSelectedId = btn.getAttribute("data-cvida-id");
+        state.cvidaTab = "1";
+        state.cvidaSubView = "detail";
+        renderCristoVidaScreen();
+      });
+    });
+  }
+
+  const activeItem = (window.CRISTO_VIDA_ITEMS || []).find((x) => x.id === state.cvidaSelectedId) || (window.CRISTO_VIDA_ITEMS || [])[0];
+  if (activeItem) {
+    document.getElementById("cvida-detail-badge").textContent = activeItem.badge;
+    document.getElementById("cvida-detail-title").textContent = activeItem.title;
+    document.getElementById("cvida-detail-ref").textContent = activeItem.ref;
+
+    document.querySelectorAll(".cvida-tab-btn").forEach((btn) => {
+      const t = btn.getAttribute("data-cvida-tab");
+      btn.className = `cvida-tab-btn py-1.5 px-2 rounded-xl font-cinzel text-xs font-semibold transition-all ${t === state.cvidaTab ? "fine-gold-active" : "fine-gold-btn"}`;
+    });
+
+    const html = state.cvidaTab === "1"
+      ? activeItem.tab1
+      : state.cvidaTab === "2"
+      ? activeItem.tab2
+      : activeItem.tab3;
+    document.getElementById("cvida-detail-body").innerHTML = html;
+  }
+}
+
+function renderCristoDogmasScreen() {
+  const isList = state.cdogmaSubView === "list";
+  document.getElementById("cdogmas-view-list").classList.toggle("hidden", !isList);
+  document.getElementById("cdogmas-view-detail").classList.toggle("hidden", isList);
+
+  const listEl = document.getElementById("cdogmas-gold-buttons");
+  if (listEl && window.CRISTO_DOGMAS) {
+    const pageSize = 4;
+    const totalPages = Math.max(1, Math.ceil(window.CRISTO_DOGMAS.length / pageSize));
+    if (state.cdogmaPage >= totalPages) state.cdogmaPage = 0;
+    const slice = window.CRISTO_DOGMAS.slice(state.cdogmaPage * pageSize, (state.cdogmaPage + 1) * pageSize);
+
+    const pageInd = document.getElementById("cdogma-page-indicator");
+    if (pageInd) pageInd.textContent = `${state.cdogmaPage + 1} / ${totalPages}`;
+
+    listEl.innerHTML = slice.map((d) => `
+      <button type="button" data-cdogma-id="${d.id}" class="cdogma-item-btn fine-gold-btn py-3 px-4 rounded-2xl text-left flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3.5 min-w-0">
+          <span class="gold-medallion-badge w-10 h-10 rounded-full font-cinzel font-bold text-sm flex items-center justify-center shrink-0">
+            ${d.num}
+          </span>
+          <span class="btn-title-scalable font-cinzel font-bold text-[#22170C] block leading-snug">
+            ${d.title}
+          </span>
+        </div>
+        <span class="font-cinzel text-xl font-bold text-[#5A3E0B] shrink-0">›</span>
+      </button>
+    `).join("");
+
+    listEl.querySelectorAll(".cdogma-item-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.cdogmaSelectedId = btn.getAttribute("data-cdogma-id");
+        state.cdogmaTab = "declaracion";
+        state.cdogmaSubView = "detail";
+        renderCristoDogmasScreen();
+      });
+    });
+  }
+
+  const d = (window.CRISTO_DOGMAS || []).find((x) => x.id === state.cdogmaSelectedId) || (window.CRISTO_DOGMAS || [])[0];
+  if (d) {
+    document.getElementById("cdogma-badge").textContent = `Dogma Cristológico ${d.num} de VIII`;
+    document.getElementById("cdogma-title").textContent = d.title;
+    document.getElementById("cdogma-authority-text").textContent = d.authority;
+    document.getElementById("cdogma-formula-es").textContent = d.formulaEs;
+    document.getElementById("cdogma-formula-la").textContent = d.formulaLa;
+    document.getElementById("cdogma-theology-text").textContent = d.theology;
+    document.getElementById("cdogma-feast-text").textContent = d.feast;
+    document.getElementById("cdogma-prayer-text").textContent = d.prayer;
+
+    ["declaracion", "teologia", "oracion"].forEach((k) => {
+      document.getElementById(`cdogma-panel-${k}`).classList.toggle("hidden", state.cdogmaTab !== k);
+    });
+    document.querySelectorAll(".cdogma-tab-btn").forEach((btn) => {
+      const k = btn.getAttribute("data-cdogma-tab");
+      btn.className = `cdogma-tab-btn py-1.5 px-2 rounded-xl font-cinzel text-xs font-semibold transition-all ${k === state.cdogmaTab ? "fine-gold-active" : "fine-gold-btn"}`;
+    });
+  }
 }
 
 // ============================================================================
@@ -1042,20 +1581,46 @@ window.addEventListener("DOMContentLoaded", async () => {
     window.visualViewport.addEventListener("resize", syncViewportHeight);
   }
 
-  // Registro y actualización automática del Service Worker v3 (Punto 11)
+  // Registro seguro del Service Worker con actualización bajo confirmación del usuario (Auditoría Punto 11)
+  let pendingSwWorker = null;
   if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
     navigator.serviceWorker.register("./sw.js").then((reg) => {
+      const promptSwUpdate = (worker) => {
+        pendingSwWorker = worker;
+        const banner = document.getElementById("sw-update-banner");
+        if (banner) banner.classList.remove("hidden");
+        showToast("✨ Nueva versión lista en el menú de configuración (☰)");
+      };
+      if (reg.waiting && navigator.serviceWorker.controller) {
+        promptSwUpdate(reg.waiting);
+      }
       reg.addEventListener("updatefound", () => {
         const newWorker = reg.installing;
         if (newWorker) {
           newWorker.addEventListener("statechange", () => {
             if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
-              newWorker.postMessage({ type: "SKIP_WAITING" });
+              promptSwUpdate(newWorker);
             }
           });
         }
       });
     }).catch(() => {});
+
+    let refreshingSw = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (refreshingSw) return;
+      refreshingSw = true;
+      window.location.reload();
+    });
+  }
+
+  const applySwUpdateBtn = document.getElementById("btn-apply-sw-update");
+  if (applySwUpdateBtn) {
+    applySwUpdateBtn.addEventListener("click", () => {
+      if (pendingSwWorker) {
+        pendingSwWorker.postMessage({ type: "SKIP_WAITING" });
+      }
+    });
   }
 
   if (window.TotusStorage) {
@@ -1069,6 +1634,8 @@ window.addEventListener("DOMContentLoaded", async () => {
       if (typeof saved.reminderEnabled === "boolean") state.reminderEnabled = saved.reminderEnabled;
       if (saved.reminderTime) state.reminderTime = saved.reminderTime;
       if (saved.lastApostoladoShownAt) state.lastApostoladoShownAt = saved.lastApostoladoShownAt;
+      const doneDays = Object.keys(state.completedDays || {}).filter(k => state.completedDays[k]).length;
+      state.cristoReyUnlocked = doneDays >= 34;
       if (saved.signatureDataUrl) state.signatureDataUrl = saved.signatureDataUrl;
       if (saved.signatureSvg) state.signatureSvg = saved.signatureSvg;
       if (saved.advSortOrder) state.advSortOrder = saved.advSortOrder;
@@ -1095,18 +1662,62 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Menú Hamburguesa de Configuraciones
+
+
+
+  // Menú Hamburguesa de Configuraciones (con botón dinámico Cerrar / Aplicar)
   const settingsModal = document.getElementById("modal-settings-menu");
   document.querySelectorAll(".btn-open-hamburger").forEach((btn) => {
     btn.addEventListener("click", () => {
       renderReminderControls();
       applyFontScaleAndLang();
+      markSettingsDirty(false);
       settingsModal.classList.remove("hidden");
     });
   });
   document.getElementById("btn-close-settings-menu").addEventListener("click", () => {
+    const wasDirty = state.settingsDirty;
     settingsModal.classList.add("hidden");
+    if (wasDirty) {
+      markSettingsDirty(false);
+      showToast("✓ Ajustes aplicados");
+    }
   });
+
+  // Controles de Privacidad: Borrar Nombre, Ciudad y Firma del dispositivo (Auditoría Punto 7)
+  const clearPersonalBtn = document.getElementById("btn-clear-personal-data");
+  const confirmClearBar = document.getElementById("confirm-clear-personal-bar");
+  const confirmClearYes = document.getElementById("btn-confirm-clear-yes");
+  const confirmClearNo = document.getElementById("btn-confirm-clear-no");
+  if (clearPersonalBtn && confirmClearBar) {
+    clearPersonalBtn.addEventListener("click", () => {
+      confirmClearBar.classList.toggle("hidden");
+    });
+  }
+  if (confirmClearNo && confirmClearBar) {
+    confirmClearNo.addEventListener("click", () => {
+      confirmClearBar.classList.add("hidden");
+    });
+  }
+  if (confirmClearYes && confirmClearBar) {
+    confirmClearYes.addEventListener("click", async () => {
+      if (window.TotusStorage && window.TotusStorage.clearPersonalData) {
+        await window.TotusStorage.clearPersonalData(state);
+      } else {
+        state.userName = "";
+        state.userPlace = "";
+        state.sigStrokes = [];
+        state.signatureDataUrl = "";
+        state.signatureSvg = "";
+        persistState();
+      }
+      redrawCanvasStrokes();
+      syncUserNameAndPlaceEverywhere();
+      confirmClearBar.classList.add("hidden");
+      markSettingsDirty(true);
+      showToast("🗑️ Nombre, ciudad y firma eliminados de este dispositivo");
+    });
+  }
 
   // Botón propio de Instalar App (Punto 10)
   const installModal = document.getElementById("modal-install-pwa");
@@ -1241,10 +1852,11 @@ window.addEventListener("DOMContentLoaded", async () => {
     switchScreen("advocaciones");
   });
 
-  document.querySelectorAll("[data-nav='home']").forEach((btn) => {
+  document.querySelectorAll("[data-nav]").forEach((btn) => {
     btn.addEventListener("click", () => {
+      const target = btn.getAttribute("data-nav") || "home";
       settingsModal.classList.add("hidden");
-      switchScreen("home");
+      switchScreen(target);
     });
   });
 
@@ -1254,6 +1866,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       state.fontSizeScale = Math.min(1.45, Math.max(0.90, +(state.fontSizeScale + delta).toFixed(2)));
       applyFontScaleAndLang();
       persistState();
+      markSettingsDirty(true);
       showToast(`Tamaño de lectura: ${Math.round(state.fontSizeScale * 100)}%`);
     });
   });
@@ -1265,6 +1878,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       state.uiLang = e.target.value;
       applyFontScaleAndLang();
       persistState();
+      markSettingsDirty(true);
     });
   }
 
@@ -1276,6 +1890,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       state.reminderTime = e.target.value || "20:00";
       persistState();
       renderReminderControls();
+      markSettingsDirty(true);
       if (state.reminderEnabled) {
         showToast(`✓ Hora de recordatorio actualizada a las ${state.reminderTime}`);
       }
@@ -1294,6 +1909,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       }
       persistState();
       renderReminderControls();
+      markSettingsDirty(true);
       showToast(
         state.reminderEnabled
           ? `🔔 Recordatorio web activado (${state.reminderTime}). En iPhone usa también el botón Calendario (.ics).`
@@ -1505,9 +2121,279 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  // Selector de Modo de Acta en el Modal de Impresión A4
+  const btnCertMaria = document.getElementById("btn-cert-mode-maria");
+  const btnCertCristo = document.getElementById("btn-cert-mode-cristo");
+  if (btnCertMaria && btnCertCristo) {
+    btnCertMaria.addEventListener("click", () => {
+      state.printCertMode = "maria";
+      renderCertificatePreview();
+    });
+    btnCertCristo.addEventListener("click", () => {
+      state.printCertMode = "cristo";
+      renderCertificatePreview();
+    });
+  }
+
+  // Acceso superior central en el Menú ("Conoce a Cristo Rey") y botón inferior "Desbloquear Ahora" (temporal)
+  const menuTopCristoBtn = document.getElementById("btn-menu-top-cristo");
+  const menuLockedMsg = document.getElementById("menu-top-cristo-locked-msg");
+  if (menuTopCristoBtn) {
+    menuTopCristoBtn.addEventListener("click", () => {
+      if (state.cristoReyUnlocked) {
+        settingsModal.classList.add("hidden");
+        switchScreen("cristo-home");
+      } else if (menuLockedMsg) {
+        menuLockedMsg.classList.remove("hidden");
+      }
+    });
+  }
+
+  const msgGoVirgenBtn = document.getElementById("btn-msg-go-virgen");
+  if (msgGoVirgenBtn) {
+    msgGoVirgenBtn.addEventListener("click", () => {
+      if (menuLockedMsg) menuLockedMsg.classList.add("hidden");
+      settingsModal.classList.add("hidden");
+      switchScreen("home");
+    });
+  }
+
+  const msgScrollBottomBtn = document.getElementById("btn-msg-scroll-bottom");
+  if (msgScrollBottomBtn) {
+    msgScrollBottomBtn.addEventListener("click", () => {
+      const bottomCard = document.getElementById("menu-bottom-unlock-card");
+      if (bottomCard) {
+        bottomCard.scrollIntoView({ behavior: "smooth", block: "end" });
+      }
+    });
+  }
+
+  const unlockTemporaryNow = () => {
+    state.cristoReyUnlocked = true; // Desbloqueo temporal solo por este momento
+    if (menuLockedMsg) menuLockedMsg.classList.add("hidden");
+    settingsModal.classList.add("hidden");
+    renderCristoReyUnlockControls();
+    switchScreen("cristo-home");
+    showToast("👑 Conoce a Cristo Rey (Desbloqueado para este momento)");
+  };
+
+  const bottomUnlockNowBtn = document.getElementById("btn-unlock-cristo-now");
+  if (bottomUnlockNowBtn) {
+    bottomUnlockNowBtn.addEventListener("click", unlockTemporaryNow);
+  }
+
+  const day34OpenCristoBtn = document.getElementById("btn-day34-open-cristo-rey");
+  if (day34OpenCristoBtn) {
+    day34OpenCristoBtn.addEventListener("click", unlockTemporaryNow);
+  }
+
+  const lockUnlockNowBtn = document.getElementById("btn-lock-unlock-now");
+  if (lockUnlockNowBtn) {
+    lockUnlockNowBtn.addEventListener("click", unlockTemporaryNow);
+  }
+
+  const lockBackTotusBtn = document.getElementById("btn-lock-back-totus");
+  if (lockBackTotusBtn) {
+    lockBackTotusBtn.addEventListener("click", () => {
+      switchScreen("home");
+    });
+  }
+
+  // Tarjetas de la Portada de Cristo Rey
+  document.getElementById("cristo-home-btn-rey").addEventListener("click", () => {
+    if (!state.cristoReyUnlocked) return;
+    state.creyMode = "doctrina";
+    state.creyDocSubView = "list";
+    renderCristoReyScreen();
+    switchScreen("cristo-rey");
+  });
+  document.getElementById("cristo-home-btn-vida").addEventListener("click", () => {
+    if (!state.cristoReyUnlocked) return;
+    state.cvidaSubView = "list";
+    renderCristoVidaScreen();
+    switchScreen("cristo-vida");
+  });
+  document.getElementById("cristo-home-btn-dogmas").addEventListener("click", () => {
+    if (!state.cristoReyUnlocked) return;
+    state.cdogmaSubView = "list";
+    renderCristoDogmasScreen();
+    switchScreen("cristo-dogmas");
+  });
+
+  // Eventos internos de Pantalla 5: CRISTO REY
+  document.querySelectorAll(".crey-mode-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.creyMode = btn.getAttribute("data-crey-mode");
+      renderCristoReyScreen();
+    });
+  });
+  document.getElementById("btn-back-crey-doctrina").addEventListener("click", () => {
+    state.creyDocSubView = "list";
+    renderCristoReyScreen();
+  });
+  document.querySelectorAll(".crey-doctab-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.creyDocTab = btn.getAttribute("data-crey-doctab");
+      renderCristoReyScreen();
+    });
+  });
+  document.getElementById("input-crey-guion-search").addEventListener("input", (e) => {
+    state.creyGuionSearch = e.target.value;
+    state.creyGuionPage = 0;
+    renderCristoReyScreen();
+  });
+  document.getElementById("btn-crey-guion-prev").addEventListener("click", () => {
+    const q = normalizeText(state.creyGuionSearch.trim());
+    const count = (window.CRISTO_REY_GUIONES || []).filter((g) => !q || normalizeText(`${g.num} ${g.serie} ${g.title} ${g.esquema} ${g.desarrollo}`).includes(q)).length;
+    const total = Math.max(1, Math.ceil(count / 6));
+    state.creyGuionPage = state.creyGuionPage > 0 ? state.creyGuionPage - 1 : total - 1;
+    renderCristoReyScreen();
+  });
+  document.getElementById("btn-crey-guion-next").addEventListener("click", () => {
+    const q = normalizeText(state.creyGuionSearch.trim());
+    const count = (window.CRISTO_REY_GUIONES || []).filter((g) => !q || normalizeText(`${g.num} ${g.serie} ${g.title} ${g.esquema} ${g.desarrollo}`).includes(q)).length;
+    const total = Math.max(1, Math.ceil(count / 6));
+    state.creyGuionPage = state.creyGuionPage + 1 < total ? state.creyGuionPage + 1 : 0;
+    renderCristoReyScreen();
+  });
+  document.getElementById("btn-back-crey-guiones").addEventListener("click", () => {
+    state.creyGuionSubView = "list";
+    renderCristoReyScreen();
+  });
+  document.getElementById("btn-guion-detail-prev").addEventListener("click", () => {
+    const maxG = (window.CRISTO_REY_GUIONES || []).length || 22;
+    state.creyGuionNum = state.creyGuionNum > 1 ? state.creyGuionNum - 1 : maxG;
+    renderCristoReyScreen();
+  });
+  document.getElementById("btn-guion-detail-next").addEventListener("click", () => {
+    const maxG = (window.CRISTO_REY_GUIONES || []).length || 22;
+    state.creyGuionNum = state.creyGuionNum < maxG ? state.creyGuionNum + 1 : 1;
+    renderCristoReyScreen();
+  });
+  document.getElementById("crey-lang-es").addEventListener("click", () => {
+    state.creyOracionLang = "es";
+    renderCristoReyScreen();
+  });
+  document.getElementById("crey-lang-la").addEventListener("click", () => {
+    state.creyOracionLang = "la";
+    renderCristoReyScreen();
+  });
+  document.getElementById("btn-open-cristo-cert").addEventListener("click", () => {
+    state.printCertMode = "cristo";
+    syncUserNameAndPlaceEverywhere();
+    document.getElementById("modal-print").classList.remove("hidden");
+  });
+  document.getElementById("btn-share-cristo-rey").addEventListener("click", () => {
+    if (state.creyMode === "guiones" && state.creyGuionSubView === "detail") {
+      const g = (window.CRISTO_REY_GUIONES || []).find((x) => x.num === state.creyGuionNum) || window.CRISTO_REY_GUIONES[0];
+      shareContent({
+        title: `👑 Cristo Rey · Guión ${g.num}: ${g.title}`,
+        text: `👑 Guión ${g.num}: ${g.title} (${g.ref})
+
+Esquema: ${g.esquema}
+
+${g.desarrollo}
+
+Propósito: ${g.proposito}`
+      });
+    } else {
+      shareContent({
+        title: `👑 Santuario de Cristo Rey — La Palabra de Cristo (Mons. Ángel Herrera Oria)`,
+        text: `👑 ¡Viva Cristo Rey! «Christus vincit, Christus regnat, Christus imperat! Regnum veritatis et vitae; regnum sanctitatis et gratiae; regnum iustitiae, amoris et pacis.»`
+      });
+    }
+  });
+
+  // Eventos internos de Pantalla 6: VIDA Y MISTERIOS
+  document.querySelectorAll(".cvida-cat-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.cvidaCat = btn.getAttribute("data-cvida-cat");
+      state.cvidaPage = 0;
+      renderCristoVidaScreen();
+    });
+  });
+  document.getElementById("input-cvida-search").addEventListener("input", (e) => {
+    state.cvidaSearch = e.target.value;
+    state.cvidaPage = 0;
+    renderCristoVidaScreen();
+  });
+  document.getElementById("btn-cvida-prev-page").addEventListener("click", () => {
+    const total = Math.max(1, Math.ceil(getFilteredCristoVidaItems().length / 6));
+    state.cvidaPage = state.cvidaPage > 0 ? state.cvidaPage - 1 : total - 1;
+    renderCristoVidaScreen();
+  });
+  document.getElementById("btn-cvida-next-page").addEventListener("click", () => {
+    const total = Math.max(1, Math.ceil(getFilteredCristoVidaItems().length / 6));
+    state.cvidaPage = state.cvidaPage + 1 < total ? state.cvidaPage + 1 : 0;
+    renderCristoVidaScreen();
+  });
+  document.getElementById("btn-back-to-cvida-list").addEventListener("click", () => {
+    state.cvidaSubView = "list";
+    renderCristoVidaScreen();
+  });
+  document.querySelectorAll(".cvida-tab-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.cvidaTab = btn.getAttribute("data-cvida-tab");
+      renderCristoVidaScreen();
+    });
+  });
+  document.getElementById("btn-share-cvida").addEventListener("click", () => {
+    const item = (window.CRISTO_VIDA_ITEMS || []).find((x) => x.id === state.cvidaSelectedId) || window.CRISTO_VIDA_ITEMS[0];
+    shareContent({
+      title: `✠ ${item.title} — La Palabra de Cristo`,
+      text: `✠ ${item.badge}: ${item.title}
+(${item.ref})
+
+${item.subtitle}`
+    });
+  });
+
+  // Eventos internos de Pantalla 7: DOGMAS DE CRISTO
+  document.getElementById("btn-cdogma-prev-page").addEventListener("click", () => {
+    const total = Math.max(1, Math.ceil((window.CRISTO_DOGMAS || []).length / 4));
+    state.cdogmaPage = state.cdogmaPage > 0 ? state.cdogmaPage - 1 : total - 1;
+    renderCristoDogmasScreen();
+  });
+  document.getElementById("btn-cdogma-next-page").addEventListener("click", () => {
+    const total = Math.max(1, Math.ceil((window.CRISTO_DOGMAS || []).length / 4));
+    state.cdogmaPage = state.cdogmaPage + 1 < total ? state.cdogmaPage + 1 : 0;
+    renderCristoDogmasScreen();
+  });
+  document.getElementById("btn-back-to-cdogmas-list").addEventListener("click", () => {
+    state.cdogmaSubView = "list";
+    renderCristoDogmasScreen();
+  });
+  document.querySelectorAll(".cdogma-tab-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.cdogmaTab = btn.getAttribute("data-cdogma-tab");
+      renderCristoDogmasScreen();
+    });
+  });
+  document.getElementById("btn-share-cdogma").addEventListener("click", () => {
+    const d = (window.CRISTO_DOGMAS || []).find((x) => x.id === state.cdogmaSelectedId) || window.CRISTO_DOGMAS[0];
+    shareContent({
+      title: `✠ Dogma Cristológico ${d.num}: ${d.title}`,
+      text: `✠ Dogma Cristológico ${d.num}: ${d.title}
+Autoridad: ${d.authority}
+
+Fórmula: ${d.formulaEs}
+
+Oración: ${d.prayer}`
+    });
+  });
+
+  // Soportar ?screen=cristo-rey o ?locked=1 si se abre por enlace directo
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get("screen") === "cristo-rey" || urlParams.get("cristo") === "1") {
+    switchScreen("cristo-home");
+  }
+
   renderYearAndFeastSelectors();
   renderDogmasScreen();
   renderAdvocacionesScreen();
+  renderCristoReyScreen();
+  renderCristoVidaScreen();
+  renderCristoDogmasScreen();
   renderCertificatePreview();
   updateGlobalProgressBadge();
 });
