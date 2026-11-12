@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
-  <title>TOTUS TUUS — María Santísima: Consagración, Dogmas y 36 Advocaciones</title>
+  <title>TOTUS TUUS & CRISTO REY — Ad Iesum per Mariam (Consagración, Dogmas, 36 Advocaciones y La Palabra de Cristo)</title>
   <meta name="description" content="Devocionario y PWA Católica Tradicional: Consagración de 33 días a Jesús por María según San Luis María Grignion de Montfort, Dogmas Marianos y 36 Advocaciones históricas pre-1958." />
   <meta name="theme-color" content="#1A130C" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://upload.wikimedia.org https://commons.wikimedia.org; connect-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://upload.wikimedia.org https://commons.wikimedia.org; object-src 'none'; base-uri 'self'; form-action 'self';" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Totus Tuus" />
@@ -71,13 +73,13 @@
       </div>
     </button>
 
-    <!-- 2. Botón Portal: DOGMAS -->
+    <!-- 2. Botón Portal: DOGMAS (SEDES SAPIENTIAE LUMINOSA CON FILTRO) -->
     <button type="button" id="home-btn-dogmas" aria-label="Entrar a los Dogmas Marianos" class="group relative flex-1 w-full rounded-xl overflow-hidden border-[2.5px] border-[#C8A96A] shadow-2xl focus:outline-none">
       <picture>
         <source srcset="assets/img/dogmas.webp" type="image/webp" />
-        <img id="home-img-dogmas" src="assets/img/dogmas.jpg" alt="Santísima Virgen con aureola — Dogmas" loading="lazy" class="w-full h-full object-cover object-[center_24%] group-hover:scale-105 transition-transform duration-700" />
+        <img id="home-img-dogmas" src="assets/img/dogmas.jpg" alt="Santísima Virgen Sedes Sapientiae — Dogmas" loading="lazy" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700" />
       </picture>
-      <div class="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/10"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent"></div>
       <div class="absolute bottom-3 sm:bottom-5 inset-x-0 text-center">
         <span data-i18n="homeDogmas" class="home-panel-title text-2xl sm:text-4xl tracking-wide">Dogmas</span>
       </div>
@@ -87,7 +89,7 @@
     <button type="button" id="home-btn-advocaciones" aria-label="Entrar a las 36 Advocaciones de la Santísima Virgen" class="group relative flex-1 w-full rounded-xl overflow-hidden border-[2.5px] border-[#C8A96A] shadow-2xl focus:outline-none">
       <picture>
         <source srcset="assets/img/advocaciones.webp" type="image/webp" />
-        <img id="home-img-adv" src="assets/img/advocaciones.jpg" alt="Santísima Virgen — 36 Advocaciones" loading="lazy" class="w-full h-full object-cover object-[center_16%] group-hover:scale-105 transition-transform duration-700" />
+        <img id="home-img-adv" src="assets/img/advocaciones.jpg" alt="Santísima Virgen — 36 Advocaciones" loading="lazy" class="w-full h-full object-cover object-[center_24%] group-hover:scale-105 transition-transform duration-700" />
       </picture>
       <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/10"></div>
       <div class="absolute bottom-3 sm:bottom-5 inset-x-0 text-center">
@@ -378,9 +380,14 @@
                 <p class="font-garamond italic text-sm text-[#4A3412] mt-0.5">
                   Tras comulgar, recita y firma tu Acta de Consagración con tu rúbrica digital e imprímela en formato A4.
                 </p>
-                <button type="button" id="btn-day34-open-print" class="fine-gold-active mt-2 px-5 py-2 rounded-xl font-cinzel text-xs font-bold shadow">
-                  ✍ Firmar Digitalmente e Imprimir Acta Solemne (Día 34)
-                </button>
+                <div class="flex flex-wrap items-center justify-center gap-2 mt-2">
+                  <button type="button" id="btn-day34-open-print" class="fine-gold-active px-4 py-2 rounded-xl font-cinzel text-xs font-bold shadow">
+                    ✍ Firmar e Imprimir Acta (Día 34)
+                  </button>
+                  <button type="button" id="btn-day34-open-cristo-rey" class="fine-gold-btn px-4 py-2 rounded-xl font-cinzel text-xs font-bold shadow border-2 border-[#7A5612]">
+                    👑 Conoce a Cristo Rey →
+                  </button>
+                </div>
               </div>
 
               <div class="my-auto py-1">
@@ -651,6 +658,484 @@
     </div>
   </section>
 
+
+  <!-- =========================================================================
+       PANTALLA 4: PORTADA «CONOCE A CRISTO REY» (MARCO EN ORO BRUÑIDO 24K)
+       ========================================================================= -->
+  <main id="screen-cristo-home" class="no-print hidden app-viewport home-safe-container w-full max-w-[1600px] mx-auto overflow-hidden flex flex-col md:flex-row home-landscape-row bg-black p-2.5 sm:p-3.5 gap-2.5 sm:gap-3.5 relative" aria-label="Portada Conoce a Cristo Rey">
+
+    <!-- 1. CRISTO REY -->
+    <button type="button" id="cristo-home-btn-rey" data-id="cristo-rey" class="cristo-sacred-card" aria-label="Entrar a Cristo Rey">
+      <div class="cristo-card-inner">
+        <picture>
+          <source srcset="assets/img/cristo-rey.webp" type="image/webp" />
+          <img id="cristo-img-rey" src="assets/img/cristo-rey.jpg" alt="Nuestro Señor Jesucristo — Cristo Rey" class="cristo-card-image" />
+        </picture>
+        <div class="cristo-card-scrim"></div>
+        <div class="cristo-card-content">
+          <h2 class="cristo-card-title"><span class="cap">C</span>risto <span class="cap">R</span>ey</h2>
+        </div>
+      </div>
+    </button>
+
+    <!-- 2. VIDA Y MISTERIOS -->
+    <button type="button" id="cristo-home-btn-vida" data-id="vida-misterios" class="cristo-sacred-card" aria-label="Entrar a Vida y Misterios de Nuestro Señor">
+      <div class="cristo-card-inner">
+        <picture>
+          <source srcset="assets/img/vida-y-misterios.webp" type="image/webp" />
+          <img id="cristo-img-vida" src="assets/img/vida-y-misterios.jpg" alt="Sagrado Corazón de Jesús — Vida y Misterios" class="cristo-card-image" />
+        </picture>
+        <div class="cristo-card-scrim"></div>
+        <div class="cristo-card-content">
+          <h2 class="cristo-card-title"><span class="cap">V</span>ida <span class="conj">y</span> <span class="cap">M</span>isterios</h2>
+        </div>
+      </div>
+    </button>
+
+    <!-- 3. DOGMAS -->
+    <button type="button" id="cristo-home-btn-dogmas" data-id="dogmas-cristo" class="cristo-sacred-card" aria-label="Entrar a los Dogmas Cristológicos">
+      <div class="cristo-card-inner">
+        <picture>
+          <source srcset="assets/img/dogmas-cristo.webp" type="image/webp" />
+          <img id="cristo-img-dogmas" src="assets/img/dogmas-cristo.jpg" alt="Cristo Maestro — Dogmas Cristológicos" class="cristo-card-image" />
+        </picture>
+        <div class="cristo-card-scrim"></div>
+        <div class="cristo-card-content">
+          <h2 class="cristo-card-title"><span class="cap">D</span>ogmas</h2>
+        </div>
+      </div>
+    </button>
+
+    <!-- Modal de Bloqueo cuando aún no se ha concluido la Consagración -->
+    <div id="cristo-lock-overlay" class="cristo-lock-overlay" aria-hidden="true">
+      <div class="cristo-lock-modal" role="dialog" aria-modal="true" aria-labelledby="cristoLockHeading">
+        <div class="cristo-lock-modal-inner">
+          <svg class="cristo-lock-cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M12 2v20M6 8h12" stroke-linecap="round" />
+          </svg>
+          <h3 id="cristoLockHeading" class="cristo-lock-heading">Conoce a Cristo Rey</h3>
+          <p class="cristo-lock-text">
+            Acceso se abrirá al completar la Consagración. Esta entrada se desbloqueará permanentemente cuando concluyas tu Consagración; te sugerimos conocer primero sobre la Santísima Virgen.
+          </p>
+          <div class="flex flex-wrap items-center justify-center gap-2.5">
+            <button type="button" id="btn-lock-unlock-now" class="cristo-lock-cta cristo-lock-cta-primary">
+              Desbloquear Ahora
+            </button>
+            <button type="button" id="btn-lock-back-totus" class="cristo-lock-cta">
+              ← Volver a Totus Tuus
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       PANTALLA 5: SECCIÓN 1 — CRISTO REY (DIGNIDAD REAL + 22 ENSEÑANZAS + CONSAGRACIÓN)
+       ========================================================================= -->
+  <section id="screen-cristo-rey" class="no-print hidden app-viewport w-full overflow-hidden flex flex-col marian-silk-surface" aria-label="Sobre la Dignidad de Cristo Rey">
+    <header class="ivory-banner shrink-0 px-4 sm:px-6 flex items-center justify-between">
+      <div class="w-10"></div>
+      <h1 class="ivory-header-title text-center">Cristo Rey</h1>
+      <button type="button" aria-label="Abrir menú de configuración" class="btn-open-hamburger fine-gold-btn w-10 h-9 rounded-xl font-cinzel text-lg font-bold flex items-center justify-center shadow-sm">
+        ☰
+      </button>
+    </header>
+
+    <div class="flex-1 min-h-0 flex flex-col md:flex-row overflow-hidden">
+      <div class="hidden md:block md:w-5/12 lg:w-5/12 xl:w-5/12 h-full relative overflow-hidden border-r border-[#C8A96A] bg-[#0B0805]">
+        <picture>
+          <source srcset="assets/img/cristo-rey.webp" type="image/webp" />
+          <img id="cristo-rey-left-img" src="assets/img/cristo-rey.jpg" alt="Nuestro Señor Jesucristo Rey" class="w-full h-full object-cover object-[center_18%]" />
+        </picture>
+        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent p-5 text-center">
+          <p class="font-garamond italic text-lg lg:text-xl text-[#FFF8E7]">
+            «Christus vincit, Christus regnat, Christus imperat! Regnum veritatis et vitae; regnum sanctitatis et gratiae; regnum iustitiae, amoris et pacis.»
+          </p>
+        </div>
+      </div>
+
+      <div class="flex-1 h-full flex flex-col justify-between safe-content-pad overflow-hidden max-w-4xl xl:max-w-5xl mx-auto w-full">
+        <!-- Cabecera interna y 3 Pestañas (Sin desbordamiento) -->
+        <div class="shrink-0 space-y-1.5">
+          <div class="flex items-center justify-between gap-2 marian-reliquary-card rounded-2xl p-2">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <img src="assets/img/cristo-rey.webp" alt="Cristo Rey" class="w-10 h-10 rounded-full object-cover object-top border-2 border-[#C8A96A] shrink-0" />
+              <div class="min-w-0">
+                <span class="font-cinzel text-[9.5px] font-bold uppercase tracking-[0.14em] text-[#5A3E0B] block truncate">
+                  ✦ Mons. Ángel Herrera Oria · La Palabra de Cristo ✦
+                </span>
+                <h2 class="font-cinzel font-bold text-xs sm:text-sm text-[#22170C] truncate">
+                  Sobre la Dignidad de Cristo Rey y sus Enseñanzas
+                </h2>
+              </div>
+            </div>
+            <button type="button" id="btn-share-cristo-rey" class="fine-gold-btn px-2.5 py-1 rounded-full font-cinzel text-[11px] font-bold shrink-0">
+              📤 Compartir
+            </button>
+          </div>
+
+          <div class="grid grid-cols-3 gap-1.5" role="tablist" aria-label="Secciones de Cristo Rey">
+            <button type="button" role="tab" data-crey-mode="doctrina" class="crey-mode-btn fine-gold-active py-1.5 px-1.5 rounded-xl font-cinzel text-[11px] sm:text-xs font-bold truncate">
+              1. Dignidad Real
+            </button>
+            <button type="button" role="tab" data-crey-mode="guiones" class="crey-mode-btn fine-gold-btn py-1.5 px-1.5 rounded-xl font-cinzel text-[11px] sm:text-xs font-bold truncate">
+              2. Enseñanzas
+            </button>
+            <button type="button" role="tab" data-crey-mode="oraciones" class="crey-mode-btn fine-gold-btn py-1.5 px-1.5 rounded-xl font-cinzel text-[11px] sm:text-xs font-bold truncate">
+              3. Consagración
+            </button>
+          </div>
+        </div>
+
+        <!-- MÓDULO 1: SOBRE LA DIGNIDAD DE CRISTO REY (6 CAPÍTULOS) -->
+        <div id="crey-panel-doctrina" class="flex-1 min-h-0 flex flex-col justify-between my-1.5 overflow-hidden">
+          <div id="crey-doctrina-list" class="h-full flex flex-col justify-between">
+            <div id="crey-doctrina-buttons" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2 content-between min-h-0 my-1"></div>
+          </div>
+
+          <div id="crey-doctrina-detail" class="hidden h-full flex flex-col justify-between">
+            <div class="shrink-0">
+              <div class="flex items-center justify-between gap-2 mb-1">
+                <button type="button" id="btn-back-crey-doctrina" class="fine-gold-btn px-3 py-1 rounded-lg font-cinzel text-xs font-bold">
+                  ← 6 Capítulos sobre la Dignidad Real
+                </button>
+                <span id="crey-doc-source-badge" class="font-garamond italic text-xs text-[#5A3E0B] truncate"></span>
+              </div>
+              <h3 id="crey-doc-detail-title" class="font-cinzel font-bold text-sm sm:text-base text-[#22170C] truncate"></h3>
+              <div class="grid grid-cols-3 gap-1.5 mt-1">
+                <button type="button" data-crey-doctab="1" class="crey-doctab-btn fine-gold-active py-1 px-2 rounded-xl font-cinzel text-[11px] font-bold truncate" id="crey-doctab-label-1">Parte 1</button>
+                <button type="button" data-crey-doctab="2" class="crey-doctab-btn fine-gold-btn py-1 px-2 rounded-xl font-cinzel text-[11px] font-bold truncate" id="crey-doctab-label-2">Parte 2</button>
+                <button type="button" data-crey-doctab="3" class="crey-doctab-btn fine-gold-btn py-1 px-2 rounded-xl font-cinzel text-[11px] font-bold truncate" id="crey-doctab-label-3">Parte 3</button>
+              </div>
+            </div>
+            <div id="crey-doc-detail-body" class="flex-1 min-h-0 my-1.5 marian-reliquary-card rounded-2xl p-3.5 overflow-y-auto inner-card-scroll reading-scalable font-garamond text-[#22170C] text-justify leading-relaxed"></div>
+          </div>
+        </div>
+
+        <!-- MÓDULO 2: LAS 22 ENSEÑANZAS SOBRE CRISTO REY (ORGANIZADAS IGUAL QUE ADVOCACIONES) -->
+        <div id="crey-panel-guiones" class="hidden flex-1 min-h-0 flex flex-col justify-between my-1.5 overflow-hidden">
+          <div id="crey-guiones-list" class="h-full flex flex-col justify-between">
+            <div class="shrink-0 mb-1.5">
+              <input id="input-crey-guion-search" type="search" placeholder="Buscar enseñanza (ej. Quas Primas, familia, dos banderas, laicismo, corona)..." class="w-full bg-[#FFFDF9] border border-[#C6A152] rounded-xl px-3.5 py-1.5 font-garamond text-base text-[#22170C] placeholder-[#6E5632] focus:outline-none shadow-inner" />
+            </div>
+            <div id="crey-guiones-grid" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2 content-between min-h-0 my-1"></div>
+          </div>
+
+          <div id="crey-guiones-detail" class="hidden h-full flex flex-col justify-between">
+            <div class="flex items-center justify-between gap-2 shrink-0 mb-1">
+              <button type="button" id="btn-back-crey-guiones" class="fine-gold-btn px-3 py-1 rounded-lg font-cinzel text-xs font-bold">
+                ← Volver a las 22 Enseñanzas
+              </button>
+              <div class="flex items-center gap-1">
+                <button type="button" id="btn-guion-detail-prev" class="fine-gold-btn px-2.5 py-1 rounded-lg font-cinzel text-xs font-bold">&lt;</button>
+                <span id="crey-guion-detail-num" class="font-cinzel text-xs font-bold text-[#5A3E0B] px-2">Enseñanza 1 / 22</span>
+                <button type="button" id="btn-guion-detail-next" class="fine-gold-btn px-2.5 py-1 rounded-lg font-cinzel text-xs font-bold">&gt;</button>
+              </div>
+            </div>
+            <div class="flex-1 min-h-0 my-1 marian-reliquary-card rounded-2xl p-3.5 overflow-y-auto inner-card-scroll space-y-2.5">
+              <div>
+                <span id="crey-guion-detail-serie" class="font-cinzel text-[10px] font-bold uppercase tracking-wider text-[#5A3E0B] block"></span>
+                <h3 id="crey-guion-detail-title" class="font-cinzel font-bold text-base sm:text-lg text-[#22170C]"></h3>
+                <p id="crey-guion-detail-ref" class="font-garamond italic text-xs text-[#4A3412]"></p>
+              </div>
+              <div class="bg-[#FAF4E6] border border-[#D4B263] rounded-xl p-2.5">
+                <span class="font-cinzel text-[10px] font-bold uppercase tracking-wider text-[#5A3E0B] block">Puntos Doctrinales</span>
+                <p id="crey-guion-detail-esquema" class="reading-scalable font-garamond font-semibold text-[#22170C] mt-0.5"></p>
+              </div>
+              <div>
+                <span class="font-cinzel text-[10px] font-bold uppercase tracking-wider text-[#5A3E0B] block mb-0.5">Enseñanza y Meditación</span>
+                <p id="crey-guion-detail-desarrollo" class="reading-scalable font-garamond text-[#22170C] text-justify leading-relaxed"></p>
+              </div>
+              <div class="bg-[#FFFDF8] border-l-4 border-[#7A5612] p-2.5 rounded-r-xl">
+                <span class="font-cinzel text-[10px] font-bold uppercase tracking-wider text-[#5A3E0B] block">Fruto y Propósito Práctico</span>
+                <p id="crey-guion-detail-proposito" class="reading-scalable font-garamond italic font-semibold text-[#22170C] mt-0.5"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MÓDULO 3: CONSAGRACIÓN Y ORACIONES A CRISTO REY -->
+        <div id="crey-panel-oraciones" class="hidden flex-1 min-h-0 flex flex-col justify-between my-1.5 overflow-hidden">
+          <div class="shrink-0 flex flex-wrap items-center justify-between gap-1.5 mb-1.5">
+            <div id="crey-oraciones-pills" class="flex flex-wrap gap-1"></div>
+            <div class="inline-flex rounded-lg border border-[#B8913E] bg-[#FAF4E6] p-0.5">
+              <button type="button" id="crey-lang-es" class="px-2.5 py-0.5 rounded text-xs font-cinzel font-bold bg-[#5A3E0B] text-white">ESPAÑOL</button>
+              <button type="button" id="crey-lang-la" class="px-2.5 py-0.5 rounded text-xs font-cinzel font-bold text-[#4A3412]">LATÍN</button>
+            </div>
+          </div>
+          <div class="flex-1 min-h-0 marian-reliquary-card rounded-2xl p-3.5 overflow-y-auto inner-card-scroll">
+            <h3 id="crey-oracion-title" class="font-cinzel font-bold text-xs sm:text-sm text-[#5A3E0B] mb-1.5"></h3>
+            <p id="crey-oracion-body" class="reading-scalable font-garamond text-[#22170C] whitespace-pre-line leading-relaxed"></p>
+          </div>
+          <div class="shrink-0 pt-1.5 flex justify-end">
+            <button type="button" id="btn-open-cristo-cert" class="fine-gold-active w-full sm:w-auto px-4 py-2 rounded-xl font-cinzel text-xs font-bold shadow">
+              ✍ Firmar e Imprimir Acta Solemne a Cristo Rey (A4)
+            </button>
+          </div>
+        </div>
+
+        <!-- Barra Inferior de Navegación (Con paginador integrado igual que en Totus Tuus) -->
+        <div class="flex items-center justify-between pt-1.5 safe-bottom-bar border-t border-[#DFC690] shrink-0">
+          <div class="flex items-center gap-1.5">
+            <button type="button" data-nav="cristo-home" class="fine-gold-btn px-3 py-1.5 rounded-xl font-cinzel text-xs font-bold">
+              ← Portada Cristo Rey
+            </button>
+            <button type="button" data-nav="home" class="fine-gold-btn px-3 py-1.5 rounded-xl font-cinzel text-xs font-bold">
+              ✠ Inicio Totus Tuus
+            </button>
+          </div>
+          <div id="crey-guion-pager-wrap" class="hidden flex items-center gap-1.5">
+            <button type="button" id="btn-crey-guion-prev" class="fine-gold-btn w-9 h-8 rounded-xl font-cinzel font-bold text-sm flex items-center justify-center">&lt;</button>
+            <span id="crey-guion-page-indicator" class="font-cinzel font-bold text-xs text-[#22170C] min-w-[44px] text-center">1 / 4</span>
+            <button type="button" id="btn-crey-guion-next" class="fine-gold-btn w-9 h-8 rounded-xl font-cinzel font-bold text-sm flex items-center justify-center">&gt;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       PANTALLA 6: SECCIÓN 2 — VIDA Y MISTERIOS (EL LOGOS Y FIESTAS DEL SEÑOR)
+       ========================================================================= -->
+  <section id="screen-cristo-vida" class="no-print hidden app-viewport w-full overflow-hidden flex flex-col marian-silk-surface" aria-label="Vida y Misterios de Nuestro Señor Jesucristo">
+    <header class="ivory-banner shrink-0 px-4 sm:px-6 flex items-center justify-between">
+      <div class="w-10"></div>
+      <h1 class="ivory-header-title text-center">Vida y Misterios</h1>
+      <button type="button" aria-label="Abrir menú de configuración" class="btn-open-hamburger fine-gold-btn w-10 h-9 rounded-xl font-cinzel text-lg font-bold flex items-center justify-center shadow-sm">
+        ☰
+      </button>
+    </header>
+
+    <div class="flex-1 min-h-0 flex flex-col md:flex-row overflow-hidden">
+      <div class="hidden md:block md:w-5/12 lg:w-5/12 xl:w-5/12 h-full relative overflow-hidden border-r border-[#C8A96A] bg-[#0B0805]">
+        <picture>
+          <source srcset="assets/img/vida-y-misterios.webp" type="image/webp" />
+          <img id="cristo-vida-left-img" src="assets/img/vida-y-misterios.jpg" alt="Sagrado Corazón de Jesús — Vida y Misterios" class="w-full h-full object-cover object-[center_20%]" />
+        </picture>
+        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent p-5 text-center">
+          <p class="font-garamond italic text-lg lg:text-xl text-[#FFF8E7]">
+            «In principio erat Verbum, et Verbum erat apud Deum, et Deus erat Verbum... Et Verbum caro factum est, et habitavit in nobis.»
+          </p>
+        </div>
+      </div>
+
+      <div class="flex-1 h-full flex flex-col justify-between safe-content-pad overflow-hidden max-w-4xl xl:max-w-5xl mx-auto w-full">
+        <div id="cvida-view-list" class="h-full flex flex-col justify-between">
+          <div class="space-y-1.5 shrink-0">
+            <div class="flex items-center gap-2.5 marian-reliquary-card rounded-2xl p-2">
+              <img src="assets/img/vida-y-misterios.webp" alt="Sagrado Corazón" class="w-10 h-10 rounded-full object-cover object-top border-2 border-[#C8A96A] shrink-0" />
+              <div class="min-w-0">
+                <span class="font-cinzel text-[9.5px] font-bold uppercase tracking-[0.14em] text-[#5A3E0B] block truncate">
+                  ✦ El Logos (El Verbo de Dios) y Fiestas del Señor · Tomos I al X ✦
+                </span>
+                <h2 class="font-cinzel font-bold text-xs sm:text-sm text-[#22170C] truncate">
+                  El Verbo Eterno y Encarnado, Vida Oculta, Pasión, Pascua y Sagrado Corazón
+                </h2>
+              </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-1.5">
+              <div class="flex gap-1 shrink-0">
+                <button type="button" data-cvida-cat="all" class="cvida-cat-btn fine-gold-active px-2.5 py-1.5 rounded-xl font-cinzel text-[11px] font-bold">
+                  Todos (12)
+                </button>
+                <button type="button" data-cvida-cat="logos" class="cvida-cat-btn fine-gold-btn px-2.5 py-1.5 rounded-xl font-cinzel text-[11px] font-bold">
+                  El Logos (6)
+                </button>
+                <button type="button" data-cvida-cat="fiestas" class="cvida-cat-btn fine-gold-btn px-2.5 py-1.5 rounded-xl font-cinzel text-[11px] font-bold">
+                  Misterios (6)
+                </button>
+              </div>
+              <input id="input-cvida-search" type="search" placeholder="Buscar (ej. Prólogo, Santo Tomás, Fray Luis, Navidad, Siete Palabras, Corazón)..." class="flex-1 bg-[#FFFDF9] border border-[#C6A152] rounded-xl px-3 py-1.5 font-garamond text-base text-[#22170C] placeholder-[#6E5632] focus:outline-none shadow-inner" />
+            </div>
+          </div>
+
+          <div id="cvida-buttons-grid" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2 my-2 content-between min-h-0"></div>
+
+          <div class="flex items-center justify-between pt-1.5 safe-bottom-bar border-t border-[#DFC690] shrink-0">
+            <div class="flex items-center gap-1.5">
+              <button type="button" data-nav="cristo-home" class="fine-gold-btn px-3 py-1.5 rounded-xl font-cinzel text-xs font-bold">
+                ← Portada Cristo Rey
+              </button>
+              <button type="button" data-nav="home" class="fine-gold-btn px-3 py-1.5 rounded-xl font-cinzel text-xs font-bold">
+                ✠ Inicio Totus Tuus
+              </button>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button type="button" id="btn-cvida-prev-page" class="fine-gold-btn w-9 h-8 rounded-xl font-cinzel font-bold text-sm flex items-center justify-center">&lt;</button>
+              <span id="cvida-page-indicator" class="font-cinzel font-bold text-xs text-[#22170C] min-w-[44px] text-center">1 / 2</span>
+              <button type="button" id="btn-cvida-next-page" class="fine-gold-btn w-9 h-8 rounded-xl font-cinzel font-bold text-sm flex items-center justify-center">&gt;</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="cvida-view-detail" class="hidden h-full flex flex-col justify-between">
+          <div class="shrink-0">
+            <div class="flex items-center justify-between gap-2 marian-reliquary-card rounded-2xl p-2.5">
+              <div class="min-w-0">
+                <span id="cvida-detail-badge" class="font-cinzel text-[10px] font-bold uppercase tracking-wider text-[#5A3E0B] block"></span>
+                <h2 id="cvida-detail-title" class="font-cinzel font-bold text-sm sm:text-base text-[#22170C] leading-snug"></h2>
+                <p id="cvida-detail-ref" class="font-garamond italic text-xs text-[#4A3412]"></p>
+              </div>
+              <button type="button" id="btn-share-cvida" class="fine-gold-btn px-3 py-1.5 rounded-full font-cinzel text-xs font-bold shrink-0">
+                📤 Compartir
+              </button>
+            </div>
+
+            <div class="grid grid-cols-3 gap-1.5 mt-1.5" role="tablist">
+              <button type="button" role="tab" data-cvida-tab="1" class="cvida-tab-btn fine-gold-active py-1.5 px-2 rounded-xl font-cinzel text-xs font-semibold">
+                1. Textos y Doctrina
+              </button>
+              <button type="button" role="tab" data-cvida-tab="2" class="cvida-tab-btn fine-gold-btn py-1.5 px-2 rounded-xl font-cinzel text-xs font-semibold">
+                2. Padres y Exégesis
+              </button>
+              <button type="button" role="tab" data-cvida-tab="3" class="cvida-tab-btn fine-gold-btn py-1.5 px-2 rounded-xl font-cinzel text-xs font-semibold">
+                3. Oración
+              </button>
+            </div>
+          </div>
+
+          <div id="cvida-detail-body" class="flex-1 min-h-0 my-2 marian-reliquary-card rounded-2xl p-4 overflow-y-auto inner-card-scroll reading-scalable font-garamond text-[#22170C] text-justify leading-relaxed"></div>
+
+          <div class="flex items-center justify-between pt-1 safe-bottom-bar shrink-0">
+            <button type="button" id="btn-back-to-cvida-list" class="fine-gold-btn px-3.5 py-1.5 rounded-xl font-cinzel text-xs font-bold">
+              ← Volver a Vida y Misterios
+            </button>
+            <button type="button" data-nav="cristo-home" class="fine-gold-btn px-3.5 py-1.5 rounded-xl font-cinzel text-xs font-bold">
+              ← Portada Cristo Rey
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       PANTALLA 7: SECCIÓN 3 — DOGMAS CRISTOLÓGICOS (8 DOGMAS)
+       ========================================================================= -->
+  <section id="screen-cristo-dogmas" class="no-print hidden app-viewport w-full overflow-hidden flex flex-col marian-silk-surface" aria-label="Dogmas Cristológicos">
+    <header class="ivory-banner shrink-0 px-4 sm:px-6 flex items-center justify-between">
+      <div class="w-10"></div>
+      <h1 class="ivory-header-title text-center">Dogmas</h1>
+      <button type="button" aria-label="Abrir menú de configuración" class="btn-open-hamburger fine-gold-btn w-10 h-9 rounded-xl font-cinzel text-lg font-bold flex items-center justify-center shadow-sm">
+        ☰
+      </button>
+    </header>
+
+    <div class="flex-1 min-h-0 flex flex-col md:flex-row overflow-hidden">
+      <div class="hidden md:block md:w-5/12 lg:w-5/12 xl:w-5/12 h-full relative overflow-hidden border-r border-[#C8A96A] bg-[#090705]">
+        <picture>
+          <source srcset="assets/img/dogmas-cristo.webp" type="image/webp" />
+          <img id="cristo-dogmas-left-img" src="assets/img/dogmas-cristo.jpg" alt="Cristo Maestro — Dogmas Cristológicos" class="w-full h-full object-cover object-[center_18%]" />
+        </picture>
+        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent p-5 text-center">
+          <p class="font-garamond italic text-lg lg:text-xl text-[#FFF8E7]">
+            «Ego sum Via, et Veritas, et Vita. Nemo venit ad Patrem, nisi per Me.» (Jn 14, 6)
+          </p>
+        </div>
+      </div>
+
+      <div class="flex-1 h-full flex flex-col justify-between safe-content-pad overflow-hidden max-w-4xl xl:max-w-5xl mx-auto w-full">
+        <div id="cdogmas-view-list" class="h-full flex flex-col justify-between">
+          <div class="flex items-center gap-3 marian-reliquary-card rounded-2xl p-2.5 shrink-0">
+            <img src="assets/img/dogmas-cristo.webp" alt="Cristo Maestro" class="w-11 h-11 rounded-full object-cover object-top border-2 border-[#C8A96A] shrink-0" />
+            <div class="min-w-0">
+              <span class="font-cinzel text-[9.5px] font-bold uppercase tracking-[0.14em] text-[#5A3E0B] block">
+                ✦ Concilios Ecuménicos y Magisterio Infalible de la Iglesia ✦
+              </span>
+              <h2 class="font-cinzel font-bold text-xs sm:text-base text-[#22170C] leading-snug">
+                Los Ocho Grandes Dogmas Cristológicos de nuestra Santa Fe Católica
+              </h2>
+            </div>
+          </div>
+
+          <div id="cdogmas-gold-buttons" class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2.5 my-2.5 content-between min-h-0"></div>
+
+          <div class="flex items-center justify-between pt-1.5 safe-bottom-bar border-t border-[#DFC690] shrink-0">
+            <div class="flex items-center gap-1.5">
+              <button type="button" data-nav="cristo-home" class="fine-gold-btn px-3 py-1.5 rounded-xl font-cinzel text-xs font-bold">
+                ← Portada Cristo Rey
+              </button>
+              <button type="button" data-nav="home" class="fine-gold-btn px-3 py-1.5 rounded-xl font-cinzel text-xs font-bold">
+                ✠ Inicio Totus Tuus
+              </button>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button type="button" id="btn-cdogma-prev-page" class="fine-gold-btn w-9 h-8 rounded-xl font-cinzel font-bold text-sm flex items-center justify-center">&lt;</button>
+              <span id="cdogma-page-indicator" class="font-cinzel font-bold text-xs text-[#22170C] min-w-[44px] text-center">1 / 2</span>
+              <button type="button" id="btn-cdogma-next-page" class="fine-gold-btn w-9 h-8 rounded-xl font-cinzel font-bold text-sm flex items-center justify-center">&gt;</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="cdogmas-view-detail" class="hidden h-full flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-2">
+              <div class="min-w-0">
+                <span id="cdogma-badge" class="font-cinzel text-[10px] font-bold uppercase tracking-widest text-[#5A3E0B] block"></span>
+                <h2 id="cdogma-title" class="font-cinzel font-bold text-base sm:text-xl text-[#22170C] mt-0.5"></h2>
+              </div>
+              <button type="button" id="btn-share-cdogma" class="fine-gold-btn px-3 py-1.5 rounded-full font-cinzel text-xs font-bold shrink-0">
+                📤 Compartir
+              </button>
+            </div>
+            <div class="grid grid-cols-3 gap-1.5 mt-2" role="tablist">
+              <button type="button" role="tab" data-cdogma-tab="declaracion" class="cdogma-tab-btn fine-gold-active py-1.5 px-2 rounded-xl font-cinzel text-xs font-semibold">
+                1. Fórmula y Concilio
+              </button>
+              <button type="button" role="tab" data-cdogma-tab="teologia" class="cdogma-tab-btn fine-gold-btn py-1.5 px-2 rounded-xl font-cinzel text-xs font-semibold">
+                2. Teología
+              </button>
+              <button type="button" role="tab" data-cdogma-tab="oracion" class="cdogma-tab-btn fine-gold-btn py-1.5 px-2 rounded-xl font-cinzel text-xs font-semibold">
+                3. Fiesta y Oración
+              </button>
+            </div>
+          </div>
+
+          <div class="flex-1 min-h-0 my-2 marian-reliquary-card rounded-2xl p-4 flex flex-col justify-between overflow-y-auto inner-card-scroll">
+            <div id="cdogma-panel-declaracion" class="space-y-2.5 my-auto">
+              <div class="bg-[#FAF4E6] border border-[#D4B263] rounded-xl p-2.5">
+                <span class="font-cinzel text-[10px] font-bold uppercase tracking-wider text-[#5A3E0B] block">Concilio Ecuménico / Definición Magisterial</span>
+                <p id="cdogma-authority-text" class="reading-scalable font-garamond font-bold text-[#22170C] mt-0.5"></p>
+              </div>
+              <div class="bg-[#FFFDF8] border-l-4 border-[#7A5612] p-3 rounded-r-xl">
+                <span class="font-cinzel text-[10px] font-bold uppercase tracking-wider text-[#5A3E0B] block">Definición Dogmática (Español y Latín)</span>
+                <p id="cdogma-formula-es" class="reading-scalable font-garamond italic font-semibold text-[#22170C] mt-1"></p>
+                <p id="cdogma-formula-la" class="font-garamond text-sm text-[#4A3412] mt-1.5"></p>
+              </div>
+            </div>
+
+            <div id="cdogma-panel-teologia" class="hidden my-auto">
+              <span class="font-cinzel text-[10px] font-bold uppercase tracking-wider text-[#5A3E0B] block mb-1">Explicación Teológica, Patrística y Escolástica</span>
+              <div id="cdogma-theology-text" class="reading-scalable font-garamond text-[#22170C] text-justify leading-relaxed"></div>
+            </div>
+
+            <div id="cdogma-panel-oracion" class="hidden space-y-3 my-auto">
+              <div class="bg-[#FAF4E6] border border-[#D4B263] rounded-xl p-3">
+                <span class="font-cinzel text-[10px] font-bold uppercase tracking-wider text-[#5A3E0B] block">Fiesta Litúrgica Tradicional</span>
+                <p id="cdogma-feast-text" class="reading-scalable font-garamond font-bold text-[#22170C] mt-0.5"></p>
+              </div>
+              <div class="bg-[#FFFDF8] border border-[#C8A96A] rounded-xl p-3">
+                <span class="font-cinzel text-[10px] font-bold uppercase tracking-wider text-[#5A3E0B] block">Profesión de Fe y Oración</span>
+                <p id="cdogma-prayer-text" class="reading-scalable font-garamond italic text-[#22170C] mt-1"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-1 safe-bottom-bar">
+            <button type="button" id="btn-back-to-cdogmas-list" class="fine-gold-btn px-3.5 py-1.5 rounded-xl font-cinzel text-xs font-bold">
+              ← Volver a los 8 Dogmas
+            </button>
+            <button type="button" data-nav="cristo-home" class="fine-gold-btn px-3.5 py-1.5 rounded-xl font-cinzel text-xs font-bold">
+              ← Portada Cristo Rey
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- =========================================================================
        MODAL MAPA VISUAL DE LOS 34 DÍAS DE UN VISTAZO (PUNTO 16)
        ========================================================================= -->
@@ -695,18 +1180,56 @@
   </div>
 
   <!-- =========================================================================
-       MENÚ HAMBURGUESA DE CONFIGURACIONES (PUNTOS 10, 13, 14, 19 Y APOSTOLADO)
+       MENÚ HAMBURGUESA DE CONFIGURACIONES (CON ACCESO CENTRAL SUPERIOR A CRISTO REY
+       Y BOTÓN «DESBLOQUEAR AHORA» ABAJO CON ESTADO TEMPORAL)
        ========================================================================= -->
   <div id="modal-settings-menu" role="dialog" aria-modal="true" aria-label="Menú de Configuración" class="no-print hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-start justify-end p-3 sm:p-5">
-    <div class="marian-silk-surface border-2 border-[#7A5612] rounded-2xl max-w-md w-full max-h-[92vh] overflow-y-auto inner-card-scroll p-4 sm:p-5 space-y-3 shadow-2xl mt-6 sm:mt-2">
-      <div class="flex items-center justify-between border-b border-[#DFC690] pb-2.5">
-        <div>
-          <span class="font-cinzel text-[10px] font-bold uppercase tracking-widest text-[#5A3E0B] block">✠ Ajustes del Devocionario</span>
-          <h3 data-i18n="menuTitle" class="font-cinzel font-bold text-base sm:text-lg text-[#22170C]">Menú de Configuración</h3>
+    <div id="settings-menu-scroll-box" class="marian-silk-surface border-2 border-[#7A5612] rounded-2xl max-w-md w-full max-h-[92vh] overflow-y-auto inner-card-scroll p-4 sm:p-5 space-y-3 shadow-2xl mt-6 sm:mt-2">
+      <div class="flex items-center justify-between gap-2 border-b border-[#DFC690] pb-2.5">
+        <div class="min-w-0">
+          <span class="font-cinzel text-[9.5px] font-bold uppercase tracking-widest text-[#5A3E0B] block">✠ Ajustes del Devocionario</span>
+          <h3 data-i18n="menuTitle" class="font-cinzel font-bold text-sm sm:text-base text-[#22170C] truncate">Configuración</h3>
         </div>
-        <button type="button" id="btn-close-settings-menu" data-i18n="menuClose" class="fine-gold-active px-3.5 py-1.5 rounded-xl font-cinzel text-xs font-bold">
-          ✕ Cerrar Menú
+        <div class="flex items-center gap-1.5 shrink-0">
+          <a href="https://buymeacoffee.com/crvxvincete" target="_blank" rel="noopener noreferrer" class="fine-gold-btn px-2.5 py-1.5 rounded-xl font-cinzel text-[11px] font-bold text-[#5A3E0B] flex items-center gap-1 shadow-sm" title="Ir al Apostolado CRVXVINCET en Buy Me a Coffee">
+            ✠ CRVXVINCET
+          </a>
+          <button type="button" id="btn-close-settings-menu" class="fine-gold-active px-3 py-1.5 rounded-xl font-cinzel text-xs font-bold shadow-sm">
+            ✕ Cerrar
+          </button>
+        </div>
+      </div>
+
+      <!-- Aviso de nueva versión del Service Worker con confirmación del usuario (Auditoría Punto 11) -->
+      <div id="sw-update-banner" class="hidden bg-[#EDF5EC] border-2 border-[#275625] rounded-xl p-2.5 flex items-center justify-between gap-2">
+        <span class="font-garamond font-semibold text-sm text-[#1B3F19]">✨ Hay una actualización lista para instalar.</span>
+        <button type="button" id="btn-apply-sw-update" class="day-completed-btn px-3 py-1 rounded-lg font-cinzel text-[11px] font-bold shrink-0">
+          Actualizar Ahora
         </button>
+      </div>
+
+      <!-- ACCESO SUPERIOR EN EL CENTRO: CONOCE A CRISTO REY -->
+      <div class="marian-reliquary-card rounded-xl p-3 text-center border-2 border-[#B8913E] space-y-2">
+        <span class="font-cinzel text-[10px] font-bold uppercase tracking-[0.18em] text-[#5A3E0B] block">✠ Ad Iesum per Mariam ✠</span>
+        <button type="button" id="btn-menu-top-cristo" class="fine-gold-btn w-full py-2.5 px-4 rounded-xl font-cinzel font-bold flex flex-col items-center justify-center gap-0.5 shadow-sm mx-auto">
+          <span class="text-sm sm:text-base text-[#22170C]">👑 Conoce a Cristo Rey</span>
+          <span id="menu-top-cristo-sub" class="text-[10.5px] font-semibold text-[#5A3E0B]">🔒 Acceso se abrirá al completar la Consagración</span>
+        </button>
+
+        <!-- Aviso emergente cuando el usuario toca la entrada bloqueada arriba -->
+        <div id="menu-top-cristo-locked-msg" class="hidden bg-[#FAF3E0] border-2 border-[#8E6A1F] rounded-xl p-3 text-center space-y-2 shadow-inner">
+          <p class="font-garamond font-semibold text-sm sm:text-base text-[#22170C] leading-snug">
+            «Esta entrada se desbloqueará permanentemente cuando concluyas tu Consagración. Te sugerimos conocer sobre la Santísima Virgen; si quieres entrar ahora, el botón para desbloquear está abajo.»
+          </p>
+          <div class="flex flex-wrap items-center justify-center gap-1.5 pt-0.5">
+            <button type="button" id="btn-msg-go-virgen" class="fine-gold-active px-3 py-1.5 rounded-lg font-cinzel text-[10.5px] font-bold">
+              ✠ Conocer sobre la Santísima Virgen
+            </button>
+            <button type="button" id="btn-msg-scroll-bottom" class="fine-gold-btn px-3 py-1.5 rounded-lg font-cinzel text-[10.5px] font-bold">
+              Ir al botón de abajo ↓
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- 1. Tamaño de Lectura para Adultos Mayores y Jóvenes -->
@@ -752,9 +1275,9 @@
         </select>
       </div>
 
-      <!-- 4. Exportar / Importar Progreso + Instalar App (Puntos 10 y 14) -->
+      <!-- 4. Exportar / Importar Progreso + Privacidad + Instalar App -->
       <div class="marian-reliquary-card rounded-xl p-3 space-y-2">
-        <span data-i18n="menuBackupLabel" class="font-cinzel text-xs font-bold text-[#4A3412] uppercase block">4. Respaldo de Progreso y Dispositivo:</span>
+        <span data-i18n="menuBackupLabel" class="font-cinzel text-xs font-bold text-[#4A3412] uppercase block">4. Respaldo de Progreso y Privacidad:</span>
         <div class="grid grid-cols-2 gap-2">
           <button type="button" id="btn-export-progress" data-i18n="menuExportBtn" class="fine-gold-btn py-2 px-2 rounded-xl font-cinzel text-xs font-bold">
             💾 Exportar Progreso
@@ -764,12 +1287,29 @@
           </button>
           <input id="input-import-progress-file" type="file" accept=".json" class="hidden" />
         </div>
+        <p class="font-garamond italic text-xs text-[#4A3412] leading-snug">
+          Aviso de privacidad: El archivo de respaldo incluye tu nombre y firma si los escribiste; consérvalo en un lugar privado.
+        </p>
+        <button type="button" id="btn-clear-personal-data" class="fine-gold-btn w-full py-1.5 px-3 rounded-xl font-cinzel text-[11px] font-bold text-[#6E2219]">
+          🗑️ Borrar Nombre, Ciudad y Firma de este Dispositivo
+        </button>
+        <div id="confirm-clear-personal-bar" class="hidden bg-[#FDF2F0] border border-[#B04132] rounded-xl p-2 text-center space-y-1.5">
+          <p class="font-garamond font-semibold text-xs text-[#5C1910]">¿Confirmas eliminar tu nombre, ciudad y firma guardados en este navegador?</p>
+          <div class="flex justify-center gap-2">
+            <button type="button" id="btn-confirm-clear-yes" class="bg-[#8C2318] text-white px-3 py-1 rounded-lg font-cinzel text-[10.5px] font-bold">
+              Sí, borrar datos personales
+            </button>
+            <button type="button" id="btn-confirm-clear-no" class="fine-gold-btn px-3 py-1 rounded-lg font-cinzel text-[10.5px] font-bold">
+              Cancelar
+            </button>
+          </div>
+        </div>
         <button type="button" id="btn-menu-install-pwa" data-i18n="menuInstallBtn" class="fine-gold-btn w-full py-2 px-3 rounded-xl font-cinzel text-xs font-bold">
           📲 Instalar Aplicación en este Dispositivo
         </button>
       </div>
 
-      <!-- 5. Enlace y Mensaje del Apostolado -->
+      <!-- 5. Apostolado Católico (Sin fines de lucro) -->
       <div class="marian-reliquary-card rounded-xl p-3 space-y-1.5">
         <span class="font-cinzel text-xs font-bold text-[#5A3E0B] uppercase block">5. Apostolado Católico (Sin fines de lucro):</span>
         <p class="font-garamond text-sm text-[#22170C] leading-snug">
@@ -786,13 +1326,24 @@
         </div>
       </div>
 
-      <!-- 6. Abrir Pergamino y Firma Digital -->
+      <!-- 6. Abrir Pergamino y Navegación a Portada -->
       <div class="space-y-2 pt-0.5">
         <button type="button" id="btn-settings-open-print" class="fine-gold-active w-full py-2.5 rounded-xl font-cinzel text-xs font-bold shadow-md">
           ⎙ Abrir Pergamino, Firma Digital e Imprimir Acta (A4)
         </button>
         <button type="button" data-nav="home" class="fine-gold-btn w-full py-2 rounded-xl font-cinzel text-xs font-bold">
-          ← Volver a la Portada de Inicio
+          ← Volver a la Portada de Inicio (Totus Tuus)
+        </button>
+      </div>
+
+      <!-- ABAJO EN EL MENÚ: BOTÓN «DESBLOQUEAR AHORA» (TEMPORAL POR ESTE MOMENTO) -->
+      <div id="menu-bottom-unlock-card" class="marian-reliquary-card rounded-xl p-3 text-center space-y-2 border border-[#C8A96A]">
+        <span class="font-cinzel text-xs font-bold text-[#22170C] block">Conoce a Cristo Rey</span>
+        <p id="cristo-rey-unlock-status-desc" class="font-garamond italic text-xs sm:text-sm text-[#4A3412] leading-snug">
+          Acceso se abrirá al completar la Consagración.
+        </p>
+        <button type="button" id="btn-unlock-cristo-now" class="fine-gold-btn w-full py-2 px-4 rounded-xl font-cinzel text-xs font-bold shadow-sm">
+          Desbloquear Ahora
         </button>
       </div>
     </div>
@@ -826,6 +1377,14 @@
       </div>
 
       <div class="p-3 sm:p-4 overflow-y-auto inner-card-scroll space-y-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+          <button type="button" id="btn-cert-mode-maria" class="fine-gold-active py-2 px-3 rounded-xl font-cinzel text-xs font-bold">
+            ✠ Acta de Consagración a Jesús por María (Montfort)
+          </button>
+          <button type="button" id="btn-cert-mode-cristo" class="fine-gold-btn py-2 px-3 rounded-xl font-cinzel text-xs font-bold">
+            👑 Acta de Consagración a Cristo Rey (León XIII / Pío XI)
+          </button>
+        </div>
         <div class="marian-reliquary-card rounded-xl p-3 space-y-2.5">
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
             <div class="sm:col-span-7">
@@ -883,6 +1442,7 @@
   <div id="print-only-sheet" class="hidden border-4 border-double border-[#6E4F12] p-8 bg-white text-black"></div>
 
   <script src="assets/js/data.js"></script>
+  <script src="assets/js/cristo-data.js"></script>
   <script src="assets/js/db.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
