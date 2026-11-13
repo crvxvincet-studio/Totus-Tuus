@@ -133,6 +133,152 @@ function markSettingsDirty(isDirty) {
   }
 }
 
+
+// ============================================================================
+// SELLOS VECTORIALES OFICIALES PARA LAS HOJAS IMPRIMIBLES A4
+// 1. Sello del Inmaculado Corazón de María (Consagración Mariana)
+// 2. Sello Real del Sagrado Corazón de Jesucristo Rey de Reyes (Entronización)
+// ============================================================================
+const SEAL_IMMACULATE_HEART_SVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" class="w-20 h-20 mx-auto">
+  <defs>
+    <radialGradient id="ihmGold" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#FFF9E2"/>
+      <stop offset="55%" stop-color="#DFB85C"/>
+      <stop offset="100%" stop-color="#7A5411"/>
+    </radialGradient>
+  </defs>
+  <circle cx="70" cy="70" r="66" fill="url(#ihmGold)" stroke="#5A3E0B" stroke-width="2.5"/>
+  <circle cx="70" cy="70" r="59" fill="#FFFDF7" stroke="#8E6A1F" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <circle cx="70" cy="70" r="46" fill="#FAF2DE" stroke="#B8913E" stroke-width="1.2"/>
+  <!-- 12 Estrellas del Inmaculado Corazón -->
+  <g fill="#7A5411" font-size="8.5" text-anchor="middle" font-family="serif">
+    <text x="70" y="21">★</text><text x="96" y="27">★</text><text x="115" y="45">★</text>
+    <text x="122" y="73">★</text><text x="115" y="99">★</text><text x="96" y="117">★</text>
+    <text x="70" y="124">★</text><text x="44" y="117">★</text><text x="25" y="99">★</text>
+    <text x="18" y="73">★</text><text x="25" y="45">★</text><text x="44" y="27">★</text>
+  </g>
+  <!-- Llama de Caridad y Lirios de Pureza -->
+  <path d="M70 30 C65 39 63 45 70 50 C77 45 75 39 70 30 Z" fill="#C83E2B" stroke="#7A1C10" stroke-width="1"/>
+  <path d="M70 34 C67 40 67 44 70 48 C73 44 73 40 70 34 Z" fill="#F5C344"/>
+  <!-- Espada de Simeón -->
+  <line x1="42" y1="54" x2="98" y2="92" stroke="#5A3E0B" stroke-width="2.6" stroke-linecap="round"/>
+  <line x1="46" y1="49" x2="39" y2="59" stroke="#7A5411" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Inmaculado Corazón -->
+  <path d="M70 98 C70 98 44 80 44 61 C44 51 53 45 62 49 C66 51 69 55 70 58 C71 55 74 51 78 49 C87 45 96 51 96 61 C96 80 70 98 70 98 Z" fill="#A82424" stroke="#5A1010" stroke-width="1.8"/>
+  <!-- Guirnalda de Rosas -->
+  <circle cx="52" cy="70" r="4.2" fill="#E88D8D" stroke="#6E1818" stroke-width="1"/>
+  <circle cx="61" cy="74" r="4.5" fill="#F4B4B4" stroke="#6E1818" stroke-width="1"/>
+  <circle cx="70" cy="75" r="4.8" fill="#FFD6D6" stroke="#6E1818" stroke-width="1"/>
+  <circle cx="79" cy="74" r="4.5" fill="#F4B4B4" stroke="#6E1818" stroke-width="1"/>
+  <circle cx="88" cy="70" r="4.2" fill="#E88D8D" stroke="#6E1818" stroke-width="1"/>
+  <!-- Monograma M -->
+  <text x="70" y="111" text-anchor="middle" fill="#5A3E0B" font-family="Cinzel,Georgia,serif" font-size="7.5" font-weight="bold" letter-spacing="1">COR MARIAE IMMACULATUM</text>
+</svg>`;
+
+const SEAL_SACRED_HEART_KING_SVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" class="w-20 h-20 mx-auto">
+  <defs>
+    <radialGradient id="shjGold" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#FFF9E2"/>
+      <stop offset="55%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#6E4B0C"/>
+    </radialGradient>
+  </defs>
+  <circle cx="70" cy="70" r="66" fill="url(#shjGold)" stroke="#4A3006" stroke-width="2.5"/>
+  <circle cx="70" cy="70" r="59" fill="#FFFDF7" stroke="#7A5411" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <circle cx="70" cy="70" r="46" fill="#FAF2DE" stroke="#B8913E" stroke-width="1.2"/>
+  <!-- Rayos Solares de Cristo Rey -->
+  <g stroke="#C89B32" stroke-width="1.1" opacity="0.75">
+    <line x1="70" y1="16" x2="70" y2="124"/><line x1="16" y1="70" x2="124" y2="70"/>
+    <line x1="32" y1="32" x2="108" y2="108"/><line x1="108" y1="32" x2="32" y2="108"/>
+  </g>
+  <!-- Cruz Real y Corona sobre el Sagrado Corazón -->
+  <path d="M70 22 L70 43 M62 29 L78 29" stroke="#5A3E0B" stroke-width="3" stroke-linecap="round"/>
+  <path d="M56 44 L62 36 L70 42 L78 36 L84 44 Z" fill="#D4AF37" stroke="#5A3E0B" stroke-width="1.2"/>
+  <!-- Llama del Amor Divino -->
+  <path d="M70 37 C65 44 64 49 70 53 C76 49 75 44 70 37 Z" fill="#D94826"/>
+  <!-- Sagrado Corazón de Jesús -->
+  <path d="M70 99 C70 99 44 81 44 62 C44 52 53 46 62 50 C66 52 69 56 70 59 C71 56 74 52 78 50 C87 46 96 52 96 62 C96 81 70 99 70 99 Z" fill="#9E1B1B" stroke="#4D0909" stroke-width="1.8"/>
+  <!-- Corona de Espinas ceñida al Corazón -->
+  <path d="M44 68 Q70 78 96 68" fill="none" stroke="#4A3006" stroke-width="2.5"/>
+  <path d="M45 72 Q70 82 95 72" fill="none" stroke="#6E4B0C" stroke-width="1.8" stroke-dasharray="3,3"/>
+  <!-- Llaga del Costado -->
+  <path d="M77 79 Q82 81 85 78" fill="none" stroke="#FFD6D6" stroke-width="2" stroke-linecap="round"/>
+  <text x="70" y="19" text-anchor="middle" fill="#5A3E0B" font-family="Cinzel,Georgia,serif" font-size="6.8" font-weight="bold" letter-spacing="0.8">CHRISTUS VINCIT · REGNAT · IMPERAT</text>
+  <text x="70" y="113" text-anchor="middle" fill="#5A3E0B" font-family="Cinzel,Georgia,serif" font-size="7.2" font-weight="bold" letter-spacing="0.9">COR IESU SACRATISSIMUM</text>
+</svg>`;
+
+// Pre-descargador de las 48 imágenes sagradas CC0 (36 Advocaciones + 12 Vida y Misterios) para Modo Avión
+async function downloadAllSacredImagesForOffline(manualTrigger = false) {
+  if (typeof caches === "undefined") {
+    if (manualTrigger) showToast("El navegador actual no soporta almacenamiento CacheStorage");
+    return;
+  }
+  const btn = document.getElementById("btn-download-offline-images");
+  const statusEl = document.getElementById("offline-images-status");
+
+  const urls = [];
+  (window.MARIAN_ADVOCATIONS || []).forEach((a) => {
+    if (a.img && a.img.startsWith("http")) urls.push(a.img);
+  });
+  (window.CRISTO_VIDA_ITEMS || []).forEach((item) => {
+    if (item.img && item.img.startsWith("http")) urls.push(item.img);
+  });
+
+  const uniqueUrls = Array.from(new Set(urls));
+  const total = uniqueUrls.length;
+  if (total === 0) return;
+
+  if (statusEl) {
+    statusEl.classList.remove("hidden");
+  }
+
+  try {
+    const cache = await caches.open("totus-tuus-sacred-images-v1");
+    let savedCount = 0;
+
+    for (let i = 0; i < total; i++) {
+      const u = uniqueUrls[i];
+      if (btn && manualTrigger) {
+        btn.textContent = `⏳ Guardando para Modo Avión (${i + 1} / ${total})...`;
+      }
+      if (statusEl) {
+        statusEl.textContent = `Descargando láminas CC0 en caché local: ${i + 1} de ${total}...`;
+      }
+
+      const existing = await cache.match(u, { ignoreVary: true });
+      if (existing) {
+        savedCount++;
+        continue;
+      }
+
+      try {
+        const resp = await fetch(u, { mode: "no-cors", credentials: "omit" });
+        if (resp) {
+          await cache.put(u, resp);
+          savedCount++;
+        }
+      } catch (innerErr) {
+        // Si está sin conexión en este instante, continúa con las demás
+      }
+    }
+
+    if (btn) {
+      btn.textContent = `✓ ${savedCount} / ${total} Imágenes listas para Modo Avión`;
+    }
+    if (statusEl) {
+      statusEl.textContent = `✓ ${savedCount} de ${total} pinturas sagradas CC0 guardadas en este dispositivo para Modo Avión.`;
+    }
+    if (manualTrigger) {
+      markSettingsDirty(true);
+      showToast(`✓ ${savedCount} imágenes guardadas para Modo Avión`);
+    }
+  } catch (e) {
+    if (manualTrigger) showToast("Verifica tu conexión a internet para descargar las imágenes");
+  }
+}
+
 // Normalizador de acentos y diacríticos para búsqueda inteligente
 function normalizeText(str) {
   return (str || "")
@@ -1177,7 +1323,9 @@ function renderCertificatePreview() {
   const safeNameTxt = escapeHtml(rawName || "____________________________________");
   const safePlaceTxt = escapeHtml(rawPlace || "________________________");
   const safeTributeTxt = escapeHtml(rawTribute);
-  const safeSignerFooter = escapeHtml(rawName || (state.printCertMode === "cristo" ? "vasallo y soldado de Cristo Rey" : "esclavo de amor de Jesús por María"));
+  const safeSignerFooter = escapeHtml(
+    rawName || (state.printCertMode === "cristo" ? "súbdito y soldado de Jesucristo Rey" : "esclavo de amor de Jesús por María")
+  );
 
   const hasValidSig = Boolean(
     state.signatureDataUrl &&
@@ -1185,8 +1333,8 @@ function renderCertificatePreview() {
     window.TotusStorage.isValidPngDataUrl(state.signatureDataUrl)
   );
   const sigBlock = hasValidSig
-    ? `<img alt="Firma digital del consagrado" class="cert-sig-img h-14 mx-auto object-contain mb-1" />`
-    : `<div class="h-12"></div>`;
+    ? `<img alt="Firma manuscrita digital del consagrado" class="cert-sig-img h-16 mx-auto object-contain mb-1" />`
+    : `<div class="h-14 flex items-center justify-center text-xs italic text-[#7A613B]">[Espacio para tu firma manuscrita o digital]</div>`;
 
   const btnMaria = document.getElementById("btn-cert-mode-maria");
   const btnCristo = document.getElementById("btn-cert-mode-cristo");
@@ -1202,58 +1350,87 @@ function renderCertificatePreview() {
   let html = "";
   if (state.printCertMode === "cristo") {
     html = `
-      <div class="text-center border-b border-[#C49E50] pb-3 mb-3">
-        <p class="font-cinzel text-[11px] uppercase tracking-[0.25em] text-[#5A3E0B]">✠ Christus Vincit · Christus Regnat · Christus Imperat ✠</p>
-        <h2 class="font-cinzel font-bold text-base sm:text-lg text-[#22170C] mt-1">
-          ACTO SOLEMNE DE CONSAGRACIÓN A JESUCRISTO REY Y A SU SAGRADO CORAZÓN
-        </h2>
-        <p class="font-garamond italic text-sm text-[#4A3412]">
-          Fórmula Pontificia de S.S. León XIII (Annum Sacrum) y S.S. Pío XI (Quas Primas) · Ad Iesum per Mariam
-        </p>
-      </div>
-      <div class="font-garamond text-base leading-relaxed text-justify space-y-2 text-[#22170C]">
-        <p>¡Oh dulcísimo Jesús, Redentor del género humano! Miradme humildemente postrado delante de vuestro altar: vuestro soy y vuestro quiero ser; y a fin de poder vivir más estrechamente unido con Vos, yo, <strong class="text-[#5A3E0B] underline decoration-[#B8913E]">${safeNameTxt}</strong>, habiendo completado mi entrega total por manos de vuestra Santísima Madre en <em>Totus Tuus</em>, me consagro hoy espontánea e íntegramente a Vos, Cristo Rey inmortal de los siglos, y a vuestro Sacratísimo Corazón.</p>
-        <p>Reconozco y profeso vuestra soberanía real sobre mi inteligencia por la adhesión íntegra a vuestra Verdad revelada; sobre mi voluntad por la obediencia amorosa a vuestros santos Mandamientos; y sobre mi corazón, mi familia y mi trabajo por el ejercicio de la caridad y de la justicia cristiana.</p>
-        <p>Sed Rey, ¡oh Señor!, no sólo de los hijos fieles que jamás se han apartado de Vos, sino también de los pródigos que os han abandonado; sed Rey de aquellos que viven engañados por el error o separados de vuestra Iglesia, y devolvedlos al puerto de la verdad y a la unidad de la fe, para que pronto no haya más que un solo rebaño y un solo Pastor.</p>
-        <p>Conceded, ¡oh Señor!, incolumidad y libertad segura a vuestra Santa Iglesia; otorgad a nuestras familias y a todos los pueblos la tranquilidad del orden; y haced que desde el uno al otro confín de la tierra resuene esta única voz: <em>¡Alabado sea el Corazón divino, por quien nos vino la salvación; a Él sea la gloria y el honor por los siglos de los siglos! ¡Viva Cristo Rey!</em> Amén.</p>
-      </div>
-      <div class="pt-4 mt-4 border-t border-[#C49E50] grid grid-cols-1 sm:grid-cols-2 items-end gap-4 font-garamond text-sm">
-        <div>
-          <p><strong>Lugar y Fecha:</strong> ${safePlaceTxt}, ${escapeHtml(day34Info.fullLabel)}</p>
-          <p class="text-xs italic text-[#4A3412]">Lema: «Ad Iesum per Mariam — Christus Vincit, Christus Regnat, Christus Imperat»</p>
+      <div class="relative border-2 border-[#8E6A1F] rounded-lg p-3 sm:p-5 bg-[#FFFDF8]">
+        <div class="flex items-center justify-between text-[#7A5411] font-cinzel text-xs font-bold mb-1">
+          <span>✠ A. M. D. G.</span>
+          <span>CHRISTUS VINCIT · CHRISTUS REGNAT · CHRISTUS IMPERAT</span>
+          <span>✠ V. C. R.</span>
         </div>
-        <div class="text-center">
-          ${sigBlock}
-          <div class="border-t border-[#22170C] pt-1 font-cinzel text-[11px]">Firma de ${safeSignerFooter}</div>
+        <div class="text-center border-b-2 border-double border-[#C49E50] pb-3 mb-3">
+          ${SEAL_SACRED_HEART_KING_SVG}
+          <p class="font-cinzel text-[10.5px] uppercase tracking-[0.22em] text-[#5A3E0B] mt-1">
+            ✠ Sello Real del Sagrado Corazón de Jesucristo Rey de Reyes ✠
+          </p>
+          <h2 class="font-cinzel font-bold text-base sm:text-lg text-[#22170C] mt-1">
+            ACTA SOLEMNE DE CONSAGRACIÓN, ENTRONIZACIÓN Y SOMETIMIENTO AL IMPERIO DE JESUCRISTO REY DE REYES
+          </h2>
+          <p class="font-garamond italic text-sm text-[#4A3412]">
+            Conforme al Magisterio de León XIII (Annum Sacrum), Pío XI (Quas Primas) y Pío XII · Ad Iesum per Mariam
+          </p>
+        </div>
+        <div class="font-garamond text-base leading-relaxed text-justify space-y-2 text-[#22170C]">
+          <p>¡Oh dulcísimo Jesús, Redentor del género humano, Rey inmortal de los siglos y Señor de los que dominan! Postrado humildemente ante vuestra real presencia, yo, <strong class="text-[#5A3E0B] underline decoration-[#B8913E]">${safeNameTxt}</strong>, habiendo acudido a Vos por medio de vuestra Santísima Madre en <em>Totus Tuus</em>, reconozco y proclamo vuestra soberanía absoluta sobre todo el universo, y me someto hoy libre, agradecida y perpetuamente a vuestro suavísimo Imperio.</p>
+          <p>En reparación por el olvido, la tibieza y la rebeldía del mundo, <strong>os entronizo hoy solemnemente en mi alma y en mi hogar como mi único Rey y Soberano</strong>: someto mi inteligencia sin reserva a vuestra Verdad infalible; someto mi voluntad a la ley santa de vuestros Mandamientos; y consagro mi corazón, mi familia, mi trabajo y mis bienes al servicio de vuestro Reino de verdad y de vida, de santidad y de gracia, de justicia, de amor y de paz.</p>
+          <p>Reinad, ¡oh Señor!, como Monarca de amor en nuestra casa: presidid nuestras decisiones, santificad nuestras alegrías, consolad nuestras penas y defendednos del enemigo. Que todas las familias de las naciones se sometan a vuestro suavísimo Imperio, y que del uno al otro confín de la tierra resuene esta única aclamación triunfal: <strong>¡Cristo vence! ¡Cristo reina! ¡Cristo impera! ¡Alabado sea el Sagrado Corazón de Jesús, por quien nos vino la salvación!</strong> Amén.</p>
+        </div>
+        <div class="pt-4 mt-4 border-t-2 border-double border-[#C49E50] grid grid-cols-1 sm:grid-cols-12 items-center gap-3 font-garamond text-sm">
+          <div class="sm:col-span-5 text-left space-y-1">
+            <p><strong>Lugar y Fecha de Entronización:</strong><br/>${safePlaceTxt}, ${escapeHtml(day34Info.fullLabel)}</p>
+            <p class="text-xs italic text-[#5A3E0B]">«Ut cunctae familiae Gentium eius suavissimo subdantur imperio.»</p>
+          </div>
+          <div class="sm:col-span-2 flex justify-center">
+            <div class="w-14 h-14 opacity-95">${SEAL_SACRED_HEART_KING_SVG.replace('w-20 h-20', 'w-14 h-14')}</div>
+          </div>
+          <div class="sm:col-span-5 text-center">
+            ${sigBlock}
+            <div class="border-t border-[#22170C] pt-1 font-cinzel text-[10.5px] font-bold">
+              Firma de ${safeSignerFooter}
+            </div>
+          </div>
         </div>
       </div>
     `;
   } else {
     html = `
-      <div class="text-center border-b border-[#C49E50] pb-3 mb-3">
-        <p class="font-cinzel text-[11px] uppercase tracking-[0.25em] text-[#5A3E0B]">✠ Totus Tuus · Ad Iesum per Mariam ✠</p>
-        <h2 class="font-cinzel font-bold text-base sm:text-lg text-[#22170C] mt-1">
-          CONSAGRACIÓN DE SÍ MISMO A JESUCRISTO, LA SABIDURÍA ENCARNADA, POR MEDIO DE MARÍA
-        </h2>
-        <p class="font-garamond italic text-sm text-[#4A3412]">
-          Fórmula oficial de San Luis María Grignion de Montfort (TVD, nn. 227–233) · ${escapeHtml(feast.title)}
-        </p>
-      </div>
-      <div class="font-garamond text-base leading-relaxed text-justify space-y-2 text-[#22170C]">
-        <p>¡Oh Sabiduría eterna y encarnada! ¡Oh amable y adorable Jesús, verdadero Dios y verdadero Hombre, Hijo único del Padre Eterno y de María, siempre Virgen! Os adoro profundamente en el seno y en los esplendores de vuestro Padre, durante la eternidad, y en el seno virginal de María, vuestra dignísima Madre, en el tiempo de vuestra Encarnación.</p>
-        <p>Por esto he recurrido a la intercesión de vuestra Santísima Madre, que Vos me habéis dado como Mediadora ante Vos, y por este medio espero obtener de Vos la contrición y el perdón de mis pecados, la adquisición y la conservación de la Sabiduría.</p>
-        <p>Yo, <strong class="text-[#5A3E0B] underline decoration-[#B8913E]">${safeNameTxt}</strong>, pecador infiel, renuevo y ratifico hoy en vuestras manos los votos de mi Bautismo. Renuncio para siempre a Satanás, a sus pompas y a sus obras, y me entrego enteramente a Jesucristo, la Sabiduría encarnada, para llevar mi cruz tras Él todos los días de mi vida; y a fin de que le sea más fiel de lo que he sido hasta ahora, os escojo hoy, ¡oh María!, en presencia de toda la corte celestial, por mi Madre y Señora.</p>
-        <p>Os entrego y consagro, en calidad de esclavo, mi cuerpo y mi alma, mis bienes interiores y exteriores, y aun el valor de mis buenas acciones pasadas, presentes y futuras, otorgándoos entero y pleno derecho de disponer de mí y de todo lo que me pertenece, sin excepción, a vuestro agrado, a la mayor gloria de Dios, en el tiempo y en la eternidad.</p>
-        <p>¡Oh Virgen fiel!, hacedme en todo tan perfecto discípulo, imitador y esclavo de la Sabiduría encarnada, Jesucristo, vuestro Hijo, que por vuestra intercesión y a ejemplo vuestro llegue a la plenitud de su edad sobre la tierra y de su gloria en los cielos. Así sea.</p>
-      </div>
-      <div class="pt-4 mt-4 border-t border-[#C49E50] grid grid-cols-1 sm:grid-cols-2 items-end gap-4 font-garamond text-sm">
-        <div>
-          <p><strong>Lugar y Fecha:</strong> ${safePlaceTxt}, ${escapeHtml(day34Info.fullLabel)}</p>
-          <p class="text-xs italic text-[#4A3412]">Tributo anual prometido (TVD, n. 231): ${safeTributeTxt}</p>
+      <div class="relative border-2 border-[#8E6A1F] rounded-lg p-3 sm:p-5 bg-[#FFFDF8]">
+        <div class="flex items-center justify-between text-[#7A5411] font-cinzel text-xs font-bold mb-1">
+          <span>✠ TOTUS TUUS EGO SUM</span>
+          <span>AD IESUM PER MARIAM</span>
+          <span>✠ OMNIA MEA TUA SUNT</span>
         </div>
-        <div class="text-center">
-          ${sigBlock}
-          <div class="border-t border-[#22170C] pt-1 font-cinzel text-[11px]">Firma de ${safeSignerFooter}</div>
+        <div class="text-center border-b-2 border-double border-[#C49E50] pb-3 mb-3">
+          ${SEAL_IMMACULATE_HEART_SVG}
+          <p class="font-cinzel text-[10.5px] uppercase tracking-[0.22em] text-[#5A3E0B] mt-1">
+            ✠ Sello del Inmaculado Corazón de María · Esclavitud de Amor ✠
+          </p>
+          <h2 class="font-cinzel font-bold text-base sm:text-lg text-[#22170C] mt-1">
+            ACTA SOLEMNE DE CONSAGRACIÓN DE SÍ MISMO A JESUCRISTO, LA SABIDURÍA ENCARNADA, POR MEDIO DE MARÍA
+          </h2>
+          <p class="font-garamond italic text-sm text-[#4A3412]">
+            Fórmula oficial de San Luis María Grignion de Montfort (TVD, nn. 227–233) · ${escapeHtml(feast.title)}
+          </p>
+        </div>
+        <div class="font-garamond text-base leading-relaxed text-justify space-y-2 text-[#22170C]">
+          <p>¡Oh Sabiduría eterna y encarnada! ¡Oh amable y adorable Jesús, verdadero Dios y verdadero Hombre, Hijo único del Padre Eterno y de María, siempre Virgen! Os adoro profundamente en el seno y en los esplendores de vuestro Padre, durante la eternidad, y en el seno virginal de María, vuestra dignísima Madre, en el tiempo de vuestra Encarnación.</p>
+          <p>Por esto he recurrido a la intercesión de vuestra Santísima Madre, que Vos me habéis dado como Mediadora ante Vos, y por este medio espero obtener de Vos la contrición y el perdón de mis pecados, la adquisición y la conservación de la Sabiduría.</p>
+          <p>Yo, <strong class="text-[#5A3E0B] underline decoration-[#B8913E]">${safeNameTxt}</strong>, pecador infiel, renuevo y ratifico hoy en vuestras manos los votos de mi Bautismo. Renuncio para siempre a Satanás, a sus pompas y a sus obras, y me entrego enteramente a Jesucristo, la Sabiduría encarnada, para llevar mi cruz tras Él todos los días de mi vida; y a fin de que le sea más fiel de lo que he sido hasta ahora, os escojo hoy, ¡oh María!, en presencia de toda la corte celestial, por mi Madre y Señora.</p>
+          <p>Os entrego y consagro, en calidad de esclavo, mi cuerpo y mi alma, mis bienes interiores y exteriores, y aun el valor de mis buenas acciones pasadas, presentes y futuras, otorgándoos entero y pleno derecho de disponer de mí y de todo lo que me pertenece, sin excepción, a vuestro agrado, a la mayor gloria de Dios, en el tiempo y en la eternidad.</p>
+          <p>¡Oh Virgen fiel!, hacedme en todo tan perfecto discípulo, imitador y esclavo de la Sabiduría encarnada, Jesucristo, vuestro Hijo, que por vuestra intercesión y a ejemplo vuestro llegue a la plenitud de su edad sobre la tierra y de su gloria en los cielos. Así sea.</p>
+        </div>
+        <div class="pt-4 mt-4 border-t-2 border-double border-[#C49E50] grid grid-cols-1 sm:grid-cols-12 items-center gap-3 font-garamond text-sm">
+          <div class="sm:col-span-5 text-left space-y-1">
+            <p><strong>Lugar y Fecha de Consagración:</strong><br/>${safePlaceTxt}, ${escapeHtml(day34Info.fullLabel)}</p>
+            <p class="text-xs italic text-[#4A3412]">Tributo anual prometido (TVD, n. 231): ${safeTributeTxt}</p>
+          </div>
+          <div class="sm:col-span-2 flex justify-center">
+            <div class="w-14 h-14 opacity-95">${SEAL_IMMACULATE_HEART_SVG.replace('w-20 h-20', 'w-14 h-14')}</div>
+          </div>
+          <div class="sm:col-span-5 text-center">
+            ${sigBlock}
+            <div class="border-t border-[#22170C] pt-1 font-cinzel text-[10.5px] font-bold">
+              Firma de ${safeSignerFooter}
+            </div>
+          </div>
         </div>
       </div>
     `;
@@ -1473,10 +1650,15 @@ function renderCristoVidaScreen() {
     gridEl.innerHTML = `<div class="col-span-2 p-6 text-center font-garamond italic text-base text-[#4A3412] marian-reliquary-card rounded-2xl">No se encontraron enseñanzas o misterios con esa palabra clave.</div>`;
   } else {
     gridEl.innerHTML = slice.map((item) => `
-      <button type="button" data-cvida-id="${item.id}" class="cvida-item-btn fine-gold-btn min-h-[3.25rem] py-2.5 px-3.5 rounded-2xl text-left flex items-center justify-between gap-2.5">
-        <span class="btn-title-scalable font-cinzel font-bold text-[#22170C] leading-snug">
-          ${item.title}
-        </span>
+      <button type="button" data-cvida-id="${item.id}" class="cvida-item-btn fine-gold-btn min-h-[3.25rem] py-2 px-3.5 rounded-2xl text-left flex items-center justify-between gap-2.5">
+        <div class="min-w-0 flex-1">
+          <span class="font-cinzel text-[9.5px] font-bold uppercase tracking-wider text-[#5A3E0B] block truncate">
+            ${item.badge}
+          </span>
+          <span class="btn-title-scalable font-cinzel font-bold text-[#22170C] leading-snug block">
+            ${item.title}
+          </span>
+        </div>
         <span class="font-cinzel font-bold text-xl text-[#5A3E0B] shrink-0">›</span>
       </button>
     `).join("");
@@ -1493,9 +1675,33 @@ function renderCristoVidaScreen() {
 
   const activeItem = (window.CRISTO_VIDA_ITEMS || []).find((x) => x.id === state.cvidaSelectedId) || (window.CRISTO_VIDA_ITEMS || [])[0];
   if (activeItem) {
+    const leftImg = document.getElementById("cristo-vida-left-img");
+    const leftCap = document.getElementById("cristo-vida-left-caption");
+    const mobileThumb = document.getElementById("cvida-mobile-thumb");
+    const fallbackSvg = window.makeSacredFallbackSvg(activeItem.title, activeItem.badge);
+
+    if (isList) {
+      const defImg = (window.INLINE_ASSET_MAP && window.INLINE_ASSET_MAP["assets/img/vida-y-misterios.webp"]) || "assets/img/vida-y-misterios.webp";
+      if (leftImg) leftImg.src = defImg;
+      if (leftCap) leftCap.textContent = "«In principio erat Verbum, et Verbum erat apud Deum, et Deus erat Verbum... Et Verbum caro factum est.»";
+    } else {
+      const paintUrl = activeItem.img || "assets/img/vida-y-misterios.webp";
+      if (leftImg) {
+        leftImg.onerror = function() { this.onerror = null; this.src = fallbackSvg; };
+        leftImg.src = paintUrl;
+      }
+      if (mobileThumb) {
+        mobileThumb.onerror = function() { this.onerror = null; this.src = fallbackSvg; };
+        mobileThumb.src = paintUrl;
+      }
+      if (leftCap) {
+        leftCap.textContent = `${activeItem.artist || activeItem.title} — Pulsa la pintura para ampliar`;
+      }
+    }
+
     document.getElementById("cvida-detail-badge").textContent = activeItem.badge;
     document.getElementById("cvida-detail-title").textContent = activeItem.title;
-    document.getElementById("cvida-detail-ref").textContent = activeItem.ref;
+    document.getElementById("cvida-detail-ref").textContent = activeItem.artist ? `${activeItem.artist} · ${activeItem.ref}` : activeItem.ref;
 
     document.querySelectorAll(".cvida-tab-btn").forEach((btn) => {
       const t = btn.getAttribute("data-cvida-tab");
@@ -1575,6 +1781,19 @@ function renderCristoDogmasScreen() {
 // 5. INICIALIZACIÓN Y VINCULACIÓN DE EVENTOS
 // ============================================================================
 window.addEventListener("DOMContentLoaded", async () => {
+  if (window.__DEFLATE_CORPUS_B64__) {
+    try {
+      const bin = Uint8Array.from(atob(window.__DEFLATE_CORPUS_B64__), (c) => c.charCodeAt(0));
+      const ds = new DecompressionStream("deflate");
+      const writer = ds.writable.getWriter();
+      writer.write(bin);
+      writer.close();
+      const txt = await new Response(ds.readable).text();
+      Object.assign(window, JSON.parse(txt));
+    } catch (e) {
+      console.error("Corpus decompression error:", e);
+    }
+  }
   detectDevice();
   window.addEventListener("resize", detectDevice);
   if (window.visualViewport) {
@@ -2158,13 +2377,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  const msgScrollBottomBtn = document.getElementById("btn-msg-scroll-bottom");
-  if (msgScrollBottomBtn) {
-    msgScrollBottomBtn.addEventListener("click", () => {
-      const bottomCard = document.getElementById("menu-bottom-unlock-card");
-      if (bottomCard) {
-        bottomCard.scrollIntoView({ behavior: "smooth", block: "end" });
-      }
+  const msgUnlockInlineBtn = document.getElementById("btn-msg-unlock-inline");
+  if (msgUnlockInlineBtn) {
+    msgUnlockInlineBtn.addEventListener("click", () => {
+      unlockTemporaryNow();
     });
   }
 
@@ -2337,6 +2553,41 @@ Propósito: ${g.proposito}`
       renderCristoVidaScreen();
     });
   });
+  const openCristoVidaLightbox = () => {
+    const item = (window.CRISTO_VIDA_ITEMS || []).find((x) => x.id === state.cvidaSelectedId) || window.CRISTO_VIDA_ITEMS[0];
+    if (!item) return;
+    const modal = document.getElementById("modal-lightbox");
+    const img = document.getElementById("lightbox-img");
+    const cap = document.getElementById("lightbox-caption");
+    const fallbackSvg = window.makeSacredFallbackSvg(item.title, item.badge);
+    img.onerror = function() { this.onerror = null; this.src = fallbackSvg; };
+    img.src = item.img || "assets/img/vida-y-misterios.webp";
+    cap.textContent = `${item.title} — ${item.artist || item.ref}`;
+    modal.classList.remove("hidden");
+  };
+  const cvidaThumb = document.getElementById("cvida-mobile-thumb");
+  if (cvidaThumb) cvidaThumb.addEventListener("click", openCristoVidaLightbox);
+  const cvidaLeftImg = document.getElementById("cristo-vida-left-img");
+  if (cvidaLeftImg) {
+    cvidaLeftImg.addEventListener("click", () => {
+      if (state.cvidaSubView === "detail") openCristoVidaLightbox();
+    });
+  }
+
+  const dlOfflineBtn = document.getElementById("btn-download-offline-images");
+  if (dlOfflineBtn) {
+    dlOfflineBtn.addEventListener("click", () => {
+      downloadAllSacredImagesForOffline(true);
+    });
+  }
+
+  // Pre-descarga silenciosa en segundo plano para Modo Avión cuando hay red
+  if (navigator.onLine) {
+    setTimeout(() => {
+      downloadAllSacredImagesForOffline(false);
+    }, 3500);
+  }
+
   document.getElementById("btn-share-cvida").addEventListener("click", () => {
     const item = (window.CRISTO_VIDA_ITEMS || []).find((x) => x.id === state.cvidaSelectedId) || window.CRISTO_VIDA_ITEMS[0];
     shareContent({
