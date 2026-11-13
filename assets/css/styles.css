@@ -589,7 +589,7 @@ button:focus-visible, select:focus-visible, input:focus-visible {
 
 /* TABLET (iPad Vertical y Horizontal desde 768px — Puntos 7 y 9) */
 @media (min-width: 768px) {
-  .md\:block { display: block; }
+  .md\:block { display: block !important; }
   .md\:flex-row { flex-direction: row; }
   .md\:w-5\/12 { width: 41.666667%; }
   .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -923,4 +923,101 @@ button:focus-visible, select:focus-visible, input:focus-visible {
   background: linear-gradient(180deg, #966B1D 0%, #6A490C 100%);
   border: 1px solid #f6e29c;
   color: #ffffff;
+}
+
+
+/* ============================================================================
+   CORRECCIÓN INTEGRAL PARA TABLET (VERTICAL Y HORIZONTAL) Y PORTADAS
+   ============================================================================ */
+
+/* 1. Portadas (#screen-home y #screen-cristo-home):
+   - En vertical (móvil y tablet portrait): 3 tarjetas apiladas verticalmente a todo lo ancho.
+   - En horizontal (landscape) o monitor panorámico: 3 columnas lado a lado con título adaptable. */
+.cover-cards-layout {
+  flex-direction: column !important;
+}
+
+@media (orientation: landscape) and (min-width: 560px), (min-width: 1100px) {
+  .cover-cards-layout {
+    flex-direction: row !important;
+  }
+  .cover-cards-layout .home-panel-title,
+  .cover-cards-layout .cristo-card-title {
+    font-size: clamp(1.15rem, 2.25vw, 1.95rem) !important;
+    letter-spacing: 0.06em !important;
+    white-space: nowrap !important;
+  }
+}
+
+/* 2. Cuadrícula de botones (.sacred-buttons-grid):
+   Cada botón crece proporcionalmente (grid-auto-rows: 1fr) para llenar el alto
+   de la pantalla en tablet y móvil sin dejar huecos blancos vacíos en el centro. */
+.sacred-buttons-grid {
+  grid-auto-rows: 1fr;
+  align-content: stretch;
+}
+
+.sacred-buttons-grid > button {
+  height: 100%;
+  min-height: 3.35rem;
+}
+
+@media (min-width: 640px) {
+  .sacred-buttons-grid {
+    gap: 0.85rem !important;
+  }
+  .sacred-buttons-grid > button {
+    padding: 0.9rem 1.25rem !important;
+    border-radius: 1.1rem !important;
+  }
+  .sacred-buttons-grid .btn-title-scalable {
+    font-size: calc(1.06rem * var(--reading-scale)) !important;
+    line-height: 1.32 !important;
+  }
+  .sacred-buttons-grid .gold-medallion-badge {
+    width: 2.75rem !important;
+    height: 2.75rem !important;
+    font-size: 0.95rem !important;
+  }
+}
+
+/* 3. En Tablet Vertical (Portrait >= 640px), ocultar el panel lateral izquierdo para dar
+   todo el ancho a las 2 columnas de botones grandes, o en Tablet Horizontal (>= 768px landscape)
+   mostrar el díptico con la pintura sagrada a la izquierda. */
+@media (min-width: 768px) and (orientation: portrait) {
+  .md\:block.md\:w-5\/12 {
+    display: none !important;
+  }
+  .safe-content-pad {
+    padding: 1.1rem 1.75rem max(1.1rem, var(--safe-bottom)) !important;
+  }
+}
+
+@media (min-width: 768px) and (orientation: landscape), (min-width: 1024px) {
+  .md\:block.md\:w-5\/12 {
+    display: block !important;
+    width: 40% !important;
+  }
+}
+
+/* 4. Menú de Configuración (#settings-menu-scroll-box):
+   Garantiza que en Tablet Horizontal y Móvil Horizontal siempre quepa dentro del área
+   visible real (--app-height) y que el botón inferior «Desbloquear Ahora» nunca quede fuera. */
+#modal-settings-menu {
+  align-items: center !important;
+}
+
+#settings-menu-scroll-box {
+  max-height: calc(var(--app-height, 100dvh) - 24px) !important;
+  margin-top: 0 !important;
+  padding-bottom: 1.25rem !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+@media (orientation: landscape) and (max-height: 680px) {
+  #settings-menu-scroll-box {
+    max-width: 42rem !important;
+    padding: 0.85rem 1.15rem 1.15rem !important;
+  }
 }
