@@ -59,7 +59,7 @@
   <!-- =========================================================================
        PANTALLA 0: PORTADA LIMPIA (RESPETA SAFE AREAS, PANTALLA ANCHA EN PC Y LANDSCAPE EN IPHONE)
        ========================================================================= -->
-  <main id="screen-home" class="no-print app-viewport home-safe-container w-full max-w-[1600px] mx-auto overflow-hidden flex flex-col md:flex-row home-landscape-row bg-[#14100C] p-2 sm:p-3 gap-2 sm:gap-3 relative" aria-label="Portada de María Santísima">
+  <main id="screen-home" class="no-print app-viewport home-safe-container w-full max-w-[1600px] mx-auto overflow-hidden flex flex-col cover-cards-layout bg-[#14100C] p-2 sm:p-3 gap-2 sm:gap-3 relative" aria-label="Portada de María Santísima">
 
     <!-- 1. Botón Portal: CONSAGRACIÓN -->
     <button type="button" id="home-btn-consagracion" aria-label="Entrar a Consagración Total a Jesús por María" class="group relative flex-1 w-full rounded-xl overflow-hidden border-[2.5px] border-[#C8A96A] shadow-2xl focus:outline-none">
@@ -154,7 +154,7 @@
             </div>
           </div>
 
-          <div class="marian-reliquary-card rounded-2xl p-3 sm:p-4 space-y-2 my-1.5 overflow-y-auto inner-card-scroll">
+          <div class="flex-1 flex flex-col justify-evenly marian-reliquary-card rounded-2xl p-3 sm:p-5 space-y-2 my-1.5 overflow-y-auto inner-card-scroll">
             <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
               <div class="sm:col-span-7">
                 <label for="input-cert-name" data-i18n="labelUserName" class="block font-cinzel text-[10px] font-bold text-[#4A3412] uppercase tracking-wider mb-0.5">
@@ -452,7 +452,7 @@
             </div>
           </div>
 
-          <div id="dogmas-gold-buttons" class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2.5 my-2.5 content-between min-h-0"></div>
+          <div id="dogmas-gold-buttons" class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2.5 my-2.5 sacred-buttons-grid min-h-0"></div>
 
           <div class="flex items-center justify-between pt-1.5 safe-bottom-bar border-t border-[#DFC690] shrink-0">
             <button type="button" data-nav="home" class="fine-gold-btn px-4 py-1.5 rounded-xl font-cinzel text-xs font-bold">
@@ -574,7 +574,7 @@
             </div>
           </div>
 
-          <div id="adv-gold-buttons-page" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2.5 my-2.5 content-between min-h-0"></div>
+          <div id="adv-gold-buttons-page" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2.5 my-2.5 sacred-buttons-grid min-h-0"></div>
 
           <div class="flex items-center justify-between pt-1.5 safe-bottom-bar border-t border-[#DFC690] shrink-0">
             <button type="button" data-nav="home" class="fine-gold-btn px-4 py-1.5 rounded-xl font-cinzel text-xs font-bold">
@@ -662,7 +662,7 @@
   <!-- =========================================================================
        PANTALLA 4: PORTADA «CONOCE A CRISTO REY» (MARCO EN ORO BRUÑIDO 24K)
        ========================================================================= -->
-  <main id="screen-cristo-home" class="no-print hidden app-viewport home-safe-container w-full max-w-[1600px] mx-auto overflow-hidden flex flex-col md:flex-row home-landscape-row bg-black p-2.5 sm:p-3.5 gap-2.5 sm:gap-3.5 relative" aria-label="Portada Conoce a Cristo Rey">
+  <main id="screen-cristo-home" class="no-print hidden app-viewport home-safe-container w-full max-w-[1600px] mx-auto overflow-hidden flex flex-col cover-cards-layout bg-black p-2.5 sm:p-3.5 gap-2.5 sm:gap-3.5 relative" aria-label="Portada Conoce a Cristo Rey">
 
     <!-- 1. CRISTO REY -->
     <button type="button" id="cristo-home-btn-rey" data-id="cristo-rey" class="cristo-sacred-card" aria-label="Entrar a Cristo Rey">
@@ -687,7 +687,7 @@
         </picture>
         <div class="cristo-card-scrim"></div>
         <div class="cristo-card-content">
-          <h2 class="cristo-card-title"><span class="cap">V</span>ida <span class="conj">y</span> <span class="cap">M</span>isterios</h2>
+          <h2 class="cristo-card-title"><span class="cap">M</span>isterios</h2>
         </div>
       </div>
     </button>
@@ -791,7 +791,7 @@
         <!-- MÓDULO 1: SOBRE LA DIGNIDAD DE CRISTO REY (6 CAPÍTULOS) -->
         <div id="crey-panel-doctrina" class="flex-1 min-h-0 flex flex-col justify-between my-1.5 overflow-hidden">
           <div id="crey-doctrina-list" class="h-full flex flex-col justify-between">
-            <div id="crey-doctrina-buttons" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2 content-between min-h-0 my-1"></div>
+            <div id="crey-doctrina-buttons" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2 sacred-buttons-grid min-h-0 my-1"></div>
           </div>
 
           <div id="crey-doctrina-detail" class="hidden h-full flex flex-col justify-between">
@@ -819,7 +819,7 @@
             <div class="shrink-0 mb-1.5">
               <input id="input-crey-guion-search" type="search" placeholder="Buscar enseñanza (ej. Quas Primas, familia, dos banderas, laicismo, corona)..." class="w-full bg-[#FFFDF9] border border-[#C6A152] rounded-xl px-3.5 py-1.5 font-garamond text-base text-[#22170C] placeholder-[#6E5632] focus:outline-none shadow-inner" />
             </div>
-            <div id="crey-guiones-grid" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2 content-between min-h-0 my-1"></div>
+            <div id="crey-guiones-grid" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2 sacred-buttons-grid min-h-0 my-1"></div>
           </div>
 
           <div id="crey-guiones-detail" class="hidden h-full flex flex-col justify-between">
@@ -829,7 +829,7 @@
               </button>
               <div class="flex items-center gap-1">
                 <button type="button" id="btn-guion-detail-prev" class="fine-gold-btn px-2.5 py-1 rounded-lg font-cinzel text-xs font-bold">&lt;</button>
-                <span id="crey-guion-detail-num" class="font-cinzel text-xs font-bold text-[#5A3E0B] px-2">Enseñanza 1 / 22</span>
+                <span id="crey-guion-detail-num" class="font-cinzel text-xs font-bold text-[#5A3E0B] px-2">Enseñanza 1 / 52</span>
                 <button type="button" id="btn-guion-detail-next" class="fine-gold-btn px-2.5 py-1 rounded-lg font-cinzel text-xs font-bold">&gt;</button>
               </div>
             </div>
@@ -870,7 +870,7 @@
           </div>
           <div class="shrink-0 pt-1.5 flex justify-end">
             <button type="button" id="btn-open-cristo-cert" class="fine-gold-active w-full sm:w-auto px-4 py-2 rounded-xl font-cinzel text-xs font-bold shadow">
-              ✍ Firmar e Imprimir Acta Solemne a Cristo Rey (A4)
+              ✍ Firmar e Imprimir Acta de Entronización e Imperio de Cristo Rey (A4)
             </button>
           </div>
         </div>
@@ -901,7 +901,7 @@
   <section id="screen-cristo-vida" class="no-print hidden app-viewport w-full overflow-hidden flex flex-col marian-silk-surface" aria-label="Vida y Misterios de Nuestro Señor Jesucristo">
     <header class="ivory-banner shrink-0 px-4 sm:px-6 flex items-center justify-between">
       <div class="w-10"></div>
-      <h1 class="ivory-header-title text-center">Vida y Misterios</h1>
+      <h1 class="ivory-header-title text-center">Misterios</h1>
       <button type="button" aria-label="Abrir menú de configuración" class="btn-open-hamburger fine-gold-btn w-10 h-9 rounded-xl font-cinzel text-lg font-bold flex items-center justify-center shadow-sm">
         ☰
       </button>
@@ -909,13 +909,10 @@
 
     <div class="flex-1 min-h-0 flex flex-col md:flex-row overflow-hidden">
       <div class="hidden md:block md:w-5/12 lg:w-5/12 xl:w-5/12 h-full relative overflow-hidden border-r border-[#C8A96A] bg-[#0B0805]">
-        <picture>
-          <source srcset="assets/img/vida-y-misterios.webp" type="image/webp" />
-          <img id="cristo-vida-left-img" src="assets/img/vida-y-misterios.jpg" alt="Sagrado Corazón de Jesús — Vida y Misterios" class="w-full h-full object-cover object-[center_20%]" />
-        </picture>
-        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent p-5 text-center">
-          <p class="font-garamond italic text-lg lg:text-xl text-[#FFF8E7]">
-            «In principio erat Verbum, et Verbum erat apud Deum, et Deus erat Verbum... Et Verbum caro factum est, et habitavit in nobis.»
+        <img id="cristo-vida-left-img" src="assets/img/vida-y-misterios.webp" alt="Pintura Sagrada CC0 — Vida y Misterios" class="w-full h-full object-cover object-[center_20%] cursor-zoom-in transition-transform duration-500 hover:scale-[1.02]" />
+        <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent p-4 text-center pointer-events-none">
+          <p id="cristo-vida-left-caption" class="font-cinzel text-xs tracking-wider text-[#F7E8C2]">
+            «In principio erat Verbum, et Verbum erat apud Deum, et Deus erat Verbum... Et Verbum caro factum est.»
           </p>
         </div>
       </div>
@@ -927,10 +924,10 @@
               <img src="assets/img/vida-y-misterios.webp" alt="Sagrado Corazón" class="w-10 h-10 rounded-full object-cover object-top border-2 border-[#C8A96A] shrink-0" />
               <div class="min-w-0">
                 <span class="font-cinzel text-[9.5px] font-bold uppercase tracking-[0.14em] text-[#5A3E0B] block truncate">
-                  ✦ El Logos (El Verbo de Dios) y Fiestas del Señor · Tomos I al X ✦
+                  ✦ 6 Estudios de El Logos y 24 Fiestas y Solemnidades de Cristo · Tomos I al X ✦
                 </span>
                 <h2 class="font-cinzel font-bold text-xs sm:text-sm text-[#22170C] truncate">
-                  El Verbo Eterno y Encarnado, Vida Oculta, Pasión, Pascua y Sagrado Corazón
+                  Toca un Misterio o Fiesta del Señor para ver su pintura CC0, doctrina, Padres y Colecta
                 </h2>
               </div>
             </div>
@@ -938,20 +935,20 @@
             <div class="flex flex-col sm:flex-row gap-1.5">
               <div class="flex gap-1 shrink-0">
                 <button type="button" data-cvida-cat="all" class="cvida-cat-btn fine-gold-active px-2.5 py-1.5 rounded-xl font-cinzel text-[11px] font-bold">
-                  Todos (12)
+                  Todos (30)
                 </button>
                 <button type="button" data-cvida-cat="logos" class="cvida-cat-btn fine-gold-btn px-2.5 py-1.5 rounded-xl font-cinzel text-[11px] font-bold">
                   El Logos (6)
                 </button>
                 <button type="button" data-cvida-cat="fiestas" class="cvida-cat-btn fine-gold-btn px-2.5 py-1.5 rounded-xl font-cinzel text-[11px] font-bold">
-                  Misterios (6)
+                  Fiestas y Solemnidades (24)
                 </button>
               </div>
               <input id="input-cvida-search" type="search" placeholder="Buscar (ej. Prólogo, Santo Tomás, Fray Luis, Navidad, Siete Palabras, Corazón)..." class="flex-1 bg-[#FFFDF9] border border-[#C6A152] rounded-xl px-3 py-1.5 font-garamond text-base text-[#22170C] placeholder-[#6E5632] focus:outline-none shadow-inner" />
             </div>
           </div>
 
-          <div id="cvida-buttons-grid" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2 my-2 content-between min-h-0"></div>
+          <div id="cvida-buttons-grid" class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2 my-2 sacred-buttons-grid min-h-0"></div>
 
           <div class="flex items-center justify-between pt-1.5 safe-bottom-bar border-t border-[#DFC690] shrink-0">
             <div class="flex items-center gap-1.5">
@@ -964,7 +961,7 @@
             </div>
             <div class="flex items-center gap-1.5">
               <button type="button" id="btn-cvida-prev-page" class="fine-gold-btn w-9 h-8 rounded-xl font-cinzel font-bold text-sm flex items-center justify-center">&lt;</button>
-              <span id="cvida-page-indicator" class="font-cinzel font-bold text-xs text-[#22170C] min-w-[44px] text-center">1 / 2</span>
+              <span id="cvida-page-indicator" class="font-cinzel font-bold text-xs text-[#22170C] min-w-[44px] text-center">1 / 5</span>
               <button type="button" id="btn-cvida-next-page" class="fine-gold-btn w-9 h-8 rounded-xl font-cinzel font-bold text-sm flex items-center justify-center">&gt;</button>
             </div>
           </div>
@@ -973,10 +970,13 @@
         <div id="cvida-view-detail" class="hidden h-full flex flex-col justify-between">
           <div class="shrink-0">
             <div class="flex items-center justify-between gap-2 marian-reliquary-card rounded-2xl p-2.5">
-              <div class="min-w-0">
-                <span id="cvida-detail-badge" class="font-cinzel text-[10px] font-bold uppercase tracking-wider text-[#5A3E0B] block"></span>
-                <h2 id="cvida-detail-title" class="font-cinzel font-bold text-sm sm:text-base text-[#22170C] leading-snug"></h2>
-                <p id="cvida-detail-ref" class="font-garamond italic text-xs text-[#4A3412]"></p>
+              <div class="flex items-center gap-3 min-w-0">
+                <img id="cvida-mobile-thumb" src="assets/img/vida-y-misterios.webp" alt="Pintura sagrada CC0 (pulsa para ampliar)" class="w-14 h-14 rounded-xl object-cover border-2 border-[#B8913E] shrink-0 cursor-zoom-in shadow" />
+                <div class="min-w-0">
+                  <span id="cvida-detail-badge" class="font-cinzel text-[10px] font-bold uppercase tracking-wider text-[#5A3E0B] block"></span>
+                  <h2 id="cvida-detail-title" class="font-cinzel font-bold text-sm sm:text-base text-[#22170C] leading-snug"></h2>
+                  <p id="cvida-detail-ref" class="font-garamond italic text-xs text-[#4A3412] truncate"></p>
+                </div>
               </div>
               <button type="button" id="btn-share-cvida" class="fine-gold-btn px-3 py-1.5 rounded-full font-cinzel text-xs font-bold shrink-0">
                 📤 Compartir
@@ -1000,7 +1000,7 @@
 
           <div class="flex items-center justify-between pt-1 safe-bottom-bar shrink-0">
             <button type="button" id="btn-back-to-cvida-list" class="fine-gold-btn px-3.5 py-1.5 rounded-xl font-cinzel text-xs font-bold">
-              ← Volver a Vida y Misterios
+              ← Volver a los 30 Misterios y Fiestas
             </button>
             <button type="button" data-nav="cristo-home" class="fine-gold-btn px-3.5 py-1.5 rounded-xl font-cinzel text-xs font-bold">
               ← Portada Cristo Rey
@@ -1050,7 +1050,7 @@
             </div>
           </div>
 
-          <div id="cdogmas-gold-buttons" class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2.5 my-2.5 content-between min-h-0"></div>
+          <div id="cdogmas-gold-buttons" class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2.5 my-2.5 sacred-buttons-grid min-h-0"></div>
 
           <div class="flex items-center justify-between pt-1.5 safe-bottom-bar border-t border-[#DFC690] shrink-0">
             <div class="flex items-center gap-1.5">
@@ -1063,7 +1063,7 @@
             </div>
             <div class="flex items-center gap-1.5">
               <button type="button" id="btn-cdogma-prev-page" class="fine-gold-btn w-9 h-8 rounded-xl font-cinzel font-bold text-sm flex items-center justify-center">&lt;</button>
-              <span id="cdogma-page-indicator" class="font-cinzel font-bold text-xs text-[#22170C] min-w-[44px] text-center">1 / 2</span>
+              <span id="cdogma-page-indicator" class="font-cinzel font-bold text-xs text-[#22170C] min-w-[44px] text-center">1 / 5</span>
               <button type="button" id="btn-cdogma-next-page" class="fine-gold-btn w-9 h-8 rounded-xl font-cinzel font-bold text-sm flex items-center justify-center">&gt;</button>
             </div>
           </div>
@@ -1221,12 +1221,12 @@
           <p class="font-garamond font-semibold text-sm sm:text-base text-[#22170C] leading-snug">
             «Esta entrada se desbloqueará permanentemente cuando concluyas tu Consagración. Te sugerimos conocer sobre la Santísima Virgen; si quieres entrar ahora, el botón para desbloquear está abajo.»
           </p>
-          <div class="flex flex-wrap items-center justify-center gap-1.5 pt-0.5">
+          <div class="flex flex-wrap items-center justify-center gap-2 pt-1">
             <button type="button" id="btn-msg-go-virgen" class="fine-gold-active px-3 py-1.5 rounded-lg font-cinzel text-[10.5px] font-bold">
               ✠ Conocer sobre la Santísima Virgen
             </button>
-            <button type="button" id="btn-msg-scroll-bottom" class="fine-gold-btn px-3 py-1.5 rounded-lg font-cinzel text-[10.5px] font-bold">
-              Ir al botón de abajo ↓
+            <button type="button" id="btn-msg-unlock-inline" class="fine-gold-btn px-3 py-1.5 rounded-lg font-cinzel text-[10.5px] font-bold border border-[#7A5612]">
+              Desbloquear Ahora
             </button>
           </div>
         </div>
@@ -1304,6 +1304,10 @@
             </button>
           </div>
         </div>
+        <button type="button" id="btn-download-offline-images" class="fine-gold-active w-full py-2 px-3 rounded-xl font-cinzel text-xs font-bold shadow-sm">
+          📥 Guardar las 48 Imágenes CC0 para Modo Avión (Offline)
+        </button>
+        <p id="offline-images-status" class="font-garamond italic text-xs text-[#275625] text-center hidden"></p>
         <button type="button" id="btn-menu-install-pwa" data-i18n="menuInstallBtn" class="fine-gold-btn w-full py-2 px-3 rounded-xl font-cinzel text-xs font-bold">
           📲 Instalar Aplicación en este Dispositivo
         </button>
@@ -1379,10 +1383,10 @@
       <div class="p-3 sm:p-4 overflow-y-auto inner-card-scroll space-y-3">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
           <button type="button" id="btn-cert-mode-maria" class="fine-gold-active py-2 px-3 rounded-xl font-cinzel text-xs font-bold">
-            ✠ Acta de Consagración a Jesús por María (Montfort)
+            ✠ Consagración a Jesús por María (Sello Inmaculado Corazón)
           </button>
           <button type="button" id="btn-cert-mode-cristo" class="fine-gold-btn py-2 px-3 rounded-xl font-cinzel text-xs font-bold">
-            👑 Acta de Consagración a Cristo Rey (León XIII / Pío XI)
+            👑 Entronización e Imperio de Cristo Rey (Sello Sagrado Corazón)
           </button>
         </div>
         <div class="marian-reliquary-card rounded-xl p-3 space-y-2.5">

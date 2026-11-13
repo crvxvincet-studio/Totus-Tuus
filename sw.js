@@ -2,8 +2,9 @@
 // SERVICE WORKER v4.3.0 — AISLAMIENTO DE CACHÉ POR NAMESPACE Y ACTUALIZACIÓN SEGURA
 // ============================================================================
 const CACHE_PREFIX = "totus-tuus-";
-const CACHE_NAME = "totus-tuus-cristo-rey-pwa-v4.3.0";
+const CACHE_NAME = "totus-tuus-cristo-rey-pwa-v4.5.0";
 const STATE_CACHE_NAME = "totus-tuus-state-cache-v2";
+const IMAGES_CACHE_NAME = "totus-tuus-sacred-images-v1";
 
 const OFFLINE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800"><rect width="600" height="800" fill="#18120B"/><rect x="24" y="24" width="552" height="752" rx="18" fill="none" stroke="#C8A96A" stroke-width="3"/><circle cx="300" cy="310" r="105" fill="#23190E" stroke="#DEC07A" stroke-width="3"/><text x="300" y="305" text-anchor="middle" fill="#F5E1A4" font-family="Georgia,serif" font-size="48" font-weight="bold">✠ M ✠</text><text x="300" y="348" text-anchor="middle" fill="#DEC07A" font-family="Georgia,serif" font-size="18">TOTUS TUUS · CRISTO REY</text><text x="300" y="500" text-anchor="middle" fill="#FFF8E7" font-family="Georgia,serif" font-size="22" font-weight="bold">Ad Iesum per Mariam</text><text x="300" y="540" text-anchor="middle" fill="#C8A96A" font-family="Georgia,serif" font-style="italic" font-size="16">Modo sin conexión activo</text></svg>`;
 
@@ -51,7 +52,8 @@ self.addEventListener("activate", (event) => {
           if (
             key.startsWith(CACHE_PREFIX) &&
             key !== CACHE_NAME &&
-            key !== STATE_CACHE_NAME
+            key !== STATE_CACHE_NAME &&
+            key !== IMAGES_CACHE_NAME
           ) {
             return caches.delete(key);
           }
@@ -88,7 +90,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   event.respondWith(
-    caches.match(event.request).then((cached) => {
+    caches.match(event.request, { ignoreVary: true }).then((cached) => {
       if (cached) return cached;
       return fetch(event.request)
         .then((networkResp) => {
